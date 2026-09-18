@@ -21,16 +21,15 @@ function AppContent() {
     setSelectedArticleId(null);
     setSearchQuery('');
 
-    // Set category based on page
     switch (page) {
       case 'articles':
         setActiveCategory('Articles');
         break;
       case 'book-reviews':
-        setActiveCategory('Book Review');
+        setActiveCategory('Book Reviews');
         break;
       case 'letters':
-        setActiveCategory('Letter');
+        setActiveCategory('Letters');
         break;
       case 'latest':
         setActiveCategory('All');
@@ -53,7 +52,6 @@ function AppContent() {
     setCurrentPage('home');
   };
 
-  // Handle initial hash-based routing
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (hash) {
@@ -62,10 +60,10 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B132B] transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Header onNavigate={handleNavigate} currentPage={currentPage} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full">
         {/* Article View */}
         {currentPage === 'article' && selectedArticleId && (
           <ArticleView articleId={selectedArticleId} onBack={handleBack} />
@@ -90,14 +88,14 @@ function AppContent() {
             )}
 
             {/* Two Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
               {/* Main Content */}
-              <div className="lg:col-span-2">
+              <div className="min-w-0">
                 <BlogFeed onReadArticle={handleReadArticle} />
               </div>
 
               {/* Sidebar */}
-              <div className="lg:col-span-1">
+              <div className="lg:sticky lg:top-28 lg:self-start">
                 <Sidebar onReadArticle={handleReadArticle} onContact={() => setContactOpen(true)} />
               </div>
             </div>

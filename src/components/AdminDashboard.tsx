@@ -3,7 +3,7 @@ import { useBlog } from '../context/BlogContext';
 import { Article, Category } from '../types';
 import { Lock, LogOut, Plus, Edit3, Trash2, Save, FileText, Eye } from 'lucide-react';
 
-const categories: Category[] = ['Articles', 'Book Review', 'Letter', 'Social Issue', 'Story', 'Weekly Report', 'Motivational'];
+const categories: Category[] = ['Articles', 'Book Reviews', 'Letters', 'Social Issues', 'Stories', 'Weekly Reports', 'Motivational'];
 
 export default function AdminDashboard() {
   const { isAdminLoggedIn, adminLogin, adminLogout, articles, addArticle, updateArticle, deleteArticle } = useBlog();
@@ -95,20 +95,20 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 border border-slate-200 dark:border-slate-700">
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center mb-4">
-                <Lock className="text-white" size={28} />
+              <div className="w-14 h-14 mx-auto bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-sm shadow-amber-500/20">
+                <Lock className="text-white" size={22} />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Student Writer Login</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <h2 className="text-xl font-bold text-slate-800">Student Writer Login</h2>
+              <p className="text-sm text-slate-500 mt-1">
                 Access the article editor to create and manage posts
               </p>
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Writer Passcode
                 </label>
                 <input
@@ -116,22 +116,22 @@ export default function AdminDashboard() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter admin passcode"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                   required
                 />
               </div>
               {loginError && (
-                <p className="text-red-500 text-sm">{loginError}</p>
+                <p className="text-red-500 text-[13px]">{loginError}</p>
               )}
               <button
                 type="submit"
-                className="w-full py-3 bg-[#0F172A] dark:bg-amber-500 text-white rounded-lg font-medium hover:bg-[#1E293B] dark:hover:bg-amber-600 transition-colors"
+                className="w-full py-2.5 bg-slate-800 text-white rounded-lg font-medium text-sm hover:bg-slate-700 transition-colors duration-200"
               >
                 Login to Dashboard
               </button>
             </form>
 
-            <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-4">
+            <p className="text-[11px] text-slate-400 text-center mt-4">
               Hint: Default passcode is "sfa2024writer"
             </p>
           </div>
@@ -146,62 +146,62 @@ export default function AdminDashboard() {
       {/* Dashboard Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-            <FileText className="text-amber-500" size={24} />
+          <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <FileText className="text-amber-500" size={20} />
             Writer Dashboard
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Create, edit, and manage articles</p>
+          <p className="text-[13px] text-slate-500 mt-0.5">Create, edit, and manage articles</p>
         </div>
         <button
           onClick={adminLogout}
-          className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-red-50 text-red-600 rounded-lg text-[12px] font-medium hover:bg-red-100 transition-colors duration-200 ring-1 ring-red-200/50"
         >
-          <LogOut size={16} />
+          <LogOut size={14} />
           Logout
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-1.5 mb-6 bg-slate-100 p-1 rounded-lg w-fit">
         <button
           onClick={() => setActiveTab('create')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-[13px] font-medium transition-all duration-200 ${
             activeTab === 'create'
-              ? 'bg-amber-500 text-white shadow-md'
-              : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+              ? 'bg-white text-slate-800 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700'
           }`}
         >
-          <Plus size={16} />
+          <Plus size={14} />
           {editingId ? 'Edit Article' : 'Create New'}
         </button>
         <button
           onClick={() => { setActiveTab('manage'); resetForm(); }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-[13px] font-medium transition-all duration-200 ${
             activeTab === 'manage'
-              ? 'bg-amber-500 text-white shadow-md'
-              : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+              ? 'bg-white text-slate-800 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700'
           }`}
         >
-          <Eye size={16} />
-          Manage Articles ({articles.length})
+          <Eye size={14} />
+          Manage ({articles.length})
         </button>
       </div>
 
       {/* Success Message */}
       {successMsg && (
-        <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg mb-4 text-sm">
+        <div className="bg-emerald-50 border border-emerald-200/60 text-emerald-700 px-4 py-3 rounded-lg mb-4 text-[13px] font-medium">
           ✓ {successMsg}
         </div>
       )}
 
       {/* Create/Edit Form */}
       {activeTab === 'create' && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+        <div className="bg-white rounded-xl shadow-sm ring-1 ring-slate-100 p-6">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Title */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Article Title *
                 </label>
                 <input
@@ -209,33 +209,33 @@ export default function AdminDashboard() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter article title"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                   required
                 />
               </div>
 
               {/* Author */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Author Name
                 </label>
                 <input
                   type="text"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Category *
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as Category)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                 >
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
 
               {/* Cover Image URL */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Cover Image URL
                 </label>
                 <input
@@ -253,13 +253,13 @@ export default function AdminDashboard() {
                   value={coverImage}
                   onChange={(e) => setCoverImage(e.target.value)}
                   placeholder="https://example.com/image.jpg"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                 />
               </div>
 
               {/* Excerpt */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Excerpt / Summary *
                 </label>
                 <textarea
@@ -267,7 +267,7 @@ export default function AdminDashboard() {
                   onChange={(e) => setExcerpt(e.target.value)}
                   placeholder="Brief summary of the article (shown in article cards)"
                   rows={2}
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-none transition-all duration-200"
                   required
                 />
               </div>
@@ -279,9 +279,9 @@ export default function AdminDashboard() {
                     type="checkbox"
                     checked={featured}
                     onChange={(e) => setFeatured(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-amber-500 focus:ring-amber-500"
+                    className="w-4 h-4 rounded border-slate-300 text-amber-500 focus:ring-amber-500/30"
                   />
-                  <span className="text-sm text-slate-700 dark:text-slate-300">
+                  <span className="text-[13px] text-slate-600 font-medium">
                     Mark as Featured (appears in featured section)
                   </span>
                 </label>
@@ -290,33 +290,33 @@ export default function AdminDashboard() {
 
             {/* Content */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                Article Content * (Supports Markdown: ## Headings, **bold**, - lists, &gt; quotes)
+              <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                Article Content * <span className="text-slate-400 font-normal">(Markdown: ## Headings, **bold**, - lists, &gt; quotes)</span>
               </label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={'Write your article content here...\n\nUse ## for headings\nUse **text** for bold\nUse - for bullet points\nUse > for quotes'}
-                rows={15}
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y font-mono text-sm"
+                rows={14}
+                className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-y font-mono leading-relaxed transition-all duration-200"
                 required
               />
             </div>
 
             {/* Actions */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2.5">
               <button
                 type="submit"
-                className="flex items-center gap-2 px-6 py-2.5 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors shadow-md"
+                className="flex items-center gap-1.5 px-5 py-2.5 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-400 transition-colors duration-200 shadow-sm shadow-amber-500/20"
               >
-                <Save size={16} />
+                <Save size={14} />
                 {editingId ? 'Update Article' : 'Publish Article'}
               </button>
               {editingId && (
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-2.5 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium hover:bg-slate-300 dark:hover:bg-slate-500 transition-colors"
+                  className="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-medium text-sm hover:bg-slate-200 transition-colors duration-200"
                 >
                   Cancel Edit
                 </button>
@@ -328,47 +328,47 @@ export default function AdminDashboard() {
 
       {/* Manage Articles */}
       {activeTab === 'manage' && (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm ring-1 ring-slate-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 dark:bg-slate-700/50">
+              <thead className="bg-slate-50 border-b border-slate-100">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Title</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase hidden md:table-cell">Category</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase hidden sm:table-cell">Date</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase hidden lg:table-cell">Views</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Actions</th>
+                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Title</th>
+                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Category</th>
+                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Date</th>
+                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Views</th>
+                  <th className="text-right px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+              <tbody className="divide-y divide-slate-100">
                 {articles.map(article => (
-                  <tr key={article.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30">
-                    <td className="px-4 py-3">
-                      <p className="text-sm font-medium text-slate-800 dark:text-white line-clamp-1">{article.title}</p>
-                      <p className="text-xs text-slate-400">{article.author}</p>
+                  <tr key={article.id} className="hover:bg-slate-50/50 transition-colors duration-150">
+                    <td className="px-5 py-3.5">
+                      <p className="text-[13px] font-medium text-slate-800 line-clamp-1">{article.title}</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">{article.author}</p>
                     </td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
+                    <td className="px-5 py-3.5 hidden md:table-cell">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/50 tracking-wide uppercase">
                         {article.category}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 hidden sm:table-cell">{article.date}</td>
-                    <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 hidden lg:table-cell">{article.views}</td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-5 py-3.5 text-[12px] text-slate-500 hidden sm:table-cell">{article.date}</td>
+                    <td className="px-5 py-3.5 text-[12px] text-slate-500 hidden lg:table-cell">{article.views}</td>
+                    <td className="px-5 py-3.5 text-right">
+                      <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => handleEdit(article)}
-                          className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded transition-colors"
+                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-150"
                           title="Edit"
                         >
-                          <Edit3 size={16} />
+                          <Edit3 size={14} />
                         </button>
                         <button
                           onClick={() => handleDelete(article.id)}
-                          className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded transition-colors"
+                          className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors duration-150"
                           title="Delete"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </td>

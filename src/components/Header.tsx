@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useBlog } from '../context/BlogContext';
-import { Search, Moon, Sun, Menu, X } from 'lucide-react';
+import { Search, Menu, X } from 'lucide-react';
 
 interface HeaderProps {
   onNavigate: (page: string) => void;
@@ -8,71 +8,63 @@ interface HeaderProps {
 }
 
 export default function Header({ onNavigate, currentPage }: HeaderProps) {
-  const { searchQuery, setSearchQuery, isDarkMode, toggleDarkMode } = useBlog();
+  const { searchQuery, setSearchQuery } = useBlog();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   const navLinks = [
     { label: 'Home', page: 'home' },
-    { label: 'Latest Published', page: 'latest' },
+    { label: 'Latest', page: 'latest' },
     { label: 'Articles', page: 'articles' },
     { label: 'Book Reviews', page: 'book-reviews' },
     { label: 'Letters', page: 'letters' },
-    { label: 'About SFA', page: 'about' },
+    { label: 'About', page: 'about' },
   ];
 
   const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
+    weekday: 'short',
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric'
   });
 
   return (
     <header className="sticky top-0 z-50">
-      {/* Top Utility Bar */}
-      <div className="bg-[#0B132B] text-white/80 text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <span className="hidden sm:block">{today}</span>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={toggleDarkMode}
-              className="flex items-center gap-1 hover:text-amber-400 transition-colors"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? <Sun size={14} /> : <Moon size={14} />}
-              <span className="hidden sm:inline">{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-            </button>
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="flex items-center gap-1 hover:text-amber-400 transition-colors"
-            >
-              <Search size={14} />
-              <span className="hidden sm:inline">Search</span>
-            </button>
-          </div>
+      {/* Streamlined Topbar */}
+      <div className="bg-[#0F172A] border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between">
+          <span className="text-[11px] tracking-wide text-slate-400 font-medium">
+            {today}
+          </span>
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="flex items-center gap-1.5 text-[11px] tracking-wide text-slate-400 hover:text-amber-400 transition-colors duration-200"
+          >
+            <Search size={12} strokeWidth={2} />
+            <span className="hidden sm:inline">Search</span>
+          </button>
         </div>
       </div>
 
       {/* Search Bar (Expandable) */}
       {searchOpen && (
-        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 shadow-sm">
-          <div className="max-w-2xl mx-auto relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+        <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 shadow-sm">
+          <div className="max-w-xl mx-auto relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} strokeWidth={1.5} />
             <input
               type="text"
               placeholder="Search articles, topics, authors..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+              className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
               autoFocus
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             )}
           </div>
@@ -80,86 +72,87 @@ export default function Header({ onNavigate, currentPage }: HeaderProps) {
       )}
 
       {/* Main Navigation */}
-      <nav className="bg-[#0F172A] dark:bg-[#0B132B] shadow-lg">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+      <nav className="bg-[#0F172A] shadow-lg shadow-slate-900/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14">
             {/* Logo & Brand */}
             <button
               onClick={() => onNavigate('home')}
-              className="flex items-center gap-3 group"
+              className="flex items-center gap-2.5 group"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center font-bold text-white text-lg shadow-md">
+              <div className="w-8 h-8 rounded-md bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center font-bold text-white text-sm shadow-sm shadow-amber-500/20">
                 S
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-white font-bold text-lg leading-tight group-hover:text-amber-400 transition-colors">
+                <span className="text-white font-semibold text-sm tracking-tight group-hover:text-amber-300 transition-colors duration-200">
                   SFA Daily Articles
-                </h1>
-                <p className="text-amber-400/80 text-[10px] leading-tight">
-                  Empowering Student Voices in Balochistan
-                </p>
+                </span>
               </div>
             </button>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-0.5">
               {navLinks.map(link => (
                 <button
                   key={link.page}
                   onClick={() => onNavigate(link.page)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`relative px-3.5 py-1.5 rounded-full text-[13px] font-medium tracking-wide transition-all duration-200 ${
                     currentPage === link.page
-                      ? 'text-amber-400 bg-white/10'
-                      : 'text-white/80 hover:text-amber-400 hover:bg-white/5'
+                      ? 'text-amber-300 bg-white/[0.08] backdrop-blur-sm'
+                      : 'text-slate-300 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
                   {link.label}
+                  {currentPage === link.page && (
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-amber-400 rounded-full" />
+                  )}
                 </button>
               ))}
+              <div className="w-px h-5 bg-slate-700 mx-2" />
               <button
                 onClick={() => onNavigate('admin')}
-                className="ml-2 px-3 py-1.5 rounded-md text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 transition-colors"
+                className="px-3.5 py-1.5 rounded-full text-[12px] font-medium tracking-wide text-amber-400/90 border border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-500/[0.06] transition-all duration-200"
               >
-                <i className="fas fa-pen-to-square mr-1"></i>
-                Student Writer
+                Writer Login
               </button>
             </div>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-white p-2 hover:bg-white/10 rounded-md transition-colors"
+              className="lg:hidden text-slate-300 p-2 hover:bg-white/[0.05] rounded-lg transition-colors duration-200"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-white/10 bg-[#0F172A]">
-            <div className="px-4 py-3 space-y-1">
+          <div className="lg:hidden border-t border-slate-800 bg-[#0F172A]">
+            <div className="px-4 py-3 space-y-0.5">
               {navLinks.map(link => (
                 <button
                   key={link.page}
                   onClick={() => { onNavigate(link.page); setMobileMenuOpen(false); }}
-                  className={`block w-full text-left px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                  className={`block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     currentPage === link.page
-                      ? 'text-amber-400 bg-white/10'
-                      : 'text-white/80 hover:text-amber-400 hover:bg-white/5'
+                      ? 'text-amber-300 bg-white/[0.06]'
+                      : 'text-slate-300 hover:text-white hover:bg-white/[0.04]'
                   }`}
                 >
                   {link.label}
                 </button>
               ))}
-              <button
-                onClick={() => { onNavigate('admin'); setMobileMenuOpen(false); }}
-                className="block w-full text-left px-3 py-2.5 rounded-md text-sm font-medium text-amber-400 bg-amber-500/10 mt-2"
-              >
-                <i className="fas fa-pen-to-square mr-2"></i>
-                Student Writer Login
-              </button>
+              <div className="pt-2 mt-2 border-t border-slate-800">
+                <button
+                  onClick={() => { onNavigate('admin'); setMobileMenuOpen(false); }}
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-amber-400/90 hover:bg-amber-500/[0.06] transition-all duration-200"
+                >
+                  Writer Login
+                </button>
+              </div>
             </div>
           </div>
         )}

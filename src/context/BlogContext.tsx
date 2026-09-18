@@ -7,12 +7,10 @@ interface BlogContextType {
   filteredArticles: Article[];
   searchQuery: string;
   activeCategory: string;
-  isDarkMode: boolean;
   isAdminLoggedIn: boolean;
   contacts: ContactMessage[];
   setSearchQuery: (query: string) => void;
   setActiveCategory: (category: string) => void;
-  toggleDarkMode: () => void;
   addArticle: (article: Omit<Article, 'id' | 'date' | 'views'>) => void;
   updateArticle: (id: string, article: Partial<Article>) => void;
   deleteArticle: (id: string) => void;
@@ -27,7 +25,6 @@ const BlogContext = createContext<BlogContextType | undefined>(undefined);
 const ADMIN_PASSWORD = 'sfa2024writer';
 const STORAGE_KEY_ARTICLES = 'sfa_articles';
 const STORAGE_KEY_CONTACTS = 'sfa_contacts';
-const STORAGE_KEY_THEME = 'sfa_theme';
 const STORAGE_KEY_ADMIN = 'sfa_admin_logged';
 
 export function BlogProvider({ children }: { children: React.ReactNode }) {
@@ -49,10 +46,6 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEY_THEME);
-    return stored === 'dark';
-  });
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
     return sessionStorage.getItem(STORAGE_KEY_ADMIN) === 'true';
   });
@@ -64,25 +57,6 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_CONTACTS, JSON.stringify(contacts));
   }, [contacts]);
-
-  useEffect(() => {
-    const html = document.documentElement;
-    if (isDarkMode) {
-      html.classList.remove('light');
-      html.classList.add('dark');
-      html.setAttribute('data-theme', 'dark');
-      localStorage.setItem(STORAGE_KEY_THEME, 'dark');
-    } else {
-      html.classList.remove('dark');
-      html.classList.add('light');
-      html.setAttribute('data-theme', 'light');
-      localStorage.setItem(STORAGE_KEY_THEME, 'light');
-    }
-  }, [isDarkMode]);
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDarkMode(prev => !prev);
-  }, []);
 
   const addArticle = useCallback((article: Omit<Article, 'id' | 'date' | 'views'>) => {
     const newArticle: Article = {
@@ -131,7 +105,7 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   const filteredArticles = articles.filter(article => {
     const matchesCategory = activeCategory === 'All' || article.category === activeCategory;
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -144,12 +118,10 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
       filteredArticles,
       searchQuery,
       activeCategory,
-      isDarkMode,
       isAdminLoggedIn,
       contacts,
       setSearchQuery,
       setActiveCategory,
-      toggleDarkMode,
       addArticle,
       updateArticle,
       deleteArticle,

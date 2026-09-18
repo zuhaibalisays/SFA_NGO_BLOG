@@ -15,11 +15,11 @@ export interface Article {
 
 export type Category =
   | 'Articles'
-  | 'Book Review'
-  | 'Letter'
-  | 'Social Issue'
-  | 'Story'
-  | 'Weekly Report'
+  | 'Book Reviews'
+  | 'Letters'
+  | 'Social Issues'
+  | 'Stories'
+  | 'Weekly Reports'
   | 'Motivational';
 
 export interface ContactMessage {

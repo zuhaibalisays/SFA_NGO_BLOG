@@ -101,7 +101,7 @@ An uneducated population leads to:
 
 Every child deserves the chance to learn, dream, and contribute to society. We cannot afford to let another generation grow up in darkness. The time to act is now.`,
     author: 'SFA Student Writer',
-    category: 'Social Issue',
+    category: 'Social Issues',
     coverImage: 'https://images.unsplash.com/photo-1497633762264-9d17053f039f?w=800&h=400&fit=crop',
     date: '2024-12-10',
     readTime: 7,
@@ -152,7 +152,7 @@ The prose is accessible yet profound. The author weaves personal anecdotes with 
 
 This book is a gentle reminder that in our rush to connect with others, we must not forget to connect with ourselves. Highly recommended for students and young adults navigating the complexities of modern life.`,
     author: 'SFA Student Writer',
-    category: 'Book Review',
+    category: 'Book Reviews',
     coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=400&fit=crop',
     date: '2024-12-08',
     readTime: 4,
@@ -208,7 +208,7 @@ Write to us. Share your stories. Let the world know what it means to be young, a
 
 *"The future belongs to those who believe in the beauty of their dreams."* — Eleanor Roosevelt`,
     author: 'SFA Student Writer',
-    category: 'Letter',
+    category: 'Letters',
     coverImage: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&h=400&fit=crop',
     date: '2024-12-05',
     readTime: 4,
@@ -282,13 +282,13 @@ Write to us. Share your stories. Let the world know what it means to be young, a
 
 *For donations or volunteer inquiries, contact SFA Welfare Organization, Turbat, Balochistan.*`,
     author: 'SFA Student Writer',
-    category: 'Weekly Report',
+    category: 'Weekly Reports',
     coverImage: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=400&fit=crop',
     date: '2024-12-01',
     readTime: 5,
     featured: false,
     views: 156,
-    tags: ['Weekly Report', 'Community', 'SFA']
+    tags: ['Weekly Reports', 'Community', 'SFA']
   },
   {
     id: '6',
@@ -339,13 +339,13 @@ Amna's story is not unique — it represents thousands of young people in Baloch
 
 *This story was collected and written by SFA Student Writers as part of our "Voices of Balochistan" series.*`,
     author: 'SFA Student Writer',
-    category: 'Story',
+    category: 'Stories',
     coverImage: 'https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=800&h=400&fit=crop',
     date: '2024-11-28',
     readTime: 6,
     featured: false,
     views: 445,
-    tags: ['Story', 'Motivational', 'Education', 'Balochistan']
+    tags: ['Stories', 'Motivational', 'Education', 'Balochistan']
   },
   {
     id: '7',
@@ -473,7 +473,7 @@ SFA has been working to address water access by:
 
 Clean water is not a privilege — it's a fundamental human right. Every citizen of Pakistan deserves access to safe drinking water. Let us work together to ensure no community in Balochistan is left behind.`,
     author: 'SFA Student Writer',
-    category: 'Social Issue',
+    category: 'Social Issues',
     coverImage: 'https://images.unsplash.com/photo-1541544741938-0af808871cc0?w=800&h=400&fit=crop',
     date: '2024-11-20',
     readTime: 6,

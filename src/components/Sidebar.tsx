@@ -6,7 +6,7 @@ interface SidebarProps {
   onContact: () => void;
 }
 
-const tags = ['Articles', 'Book Reviews', 'Letters', 'Motivational', 'Social Issues', 'Story', 'Weekly Report'];
+const tags = ['Articles', 'Book Reviews', 'Letters', 'Motivational', 'Social Issues', 'Stories', 'Weekly Reports'];
 
 export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
   const { articles, setActiveCategory } = useBlog();
@@ -18,24 +18,24 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
   }))).slice(0, 6);
 
   return (
-    <aside className="space-y-6">
+    <aside className="space-y-5">
       {/* Follow Us */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-700">
-        <h3 className="font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
-          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+      <div className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
+        <h3 className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+          <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" />
           Follow Us
         </h3>
         <div className="grid grid-cols-2 gap-2">
           {[
-            { icon: 'fab fa-facebook-f', label: 'Facebook', color: 'bg-blue-600 hover:bg-blue-700' },
-            { icon: 'fab fa-twitter', label: 'Twitter', color: 'bg-sky-500 hover:bg-sky-600' },
-            { icon: 'fab fa-youtube', label: 'YouTube', color: 'bg-red-600 hover:bg-red-700' },
-            { icon: 'fab fa-instagram', label: 'Instagram', color: 'bg-pink-600 hover:bg-pink-700' },
+            { icon: 'fab fa-facebook-f', label: 'Facebook', color: 'bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200/50' },
+            { icon: 'fab fa-twitter', label: 'Twitter', color: 'bg-sky-50 text-sky-600 hover:bg-sky-100 border-sky-200/50' },
+            { icon: 'fab fa-youtube', label: 'YouTube', color: 'bg-red-50 text-red-600 hover:bg-red-100 border-red-200/50' },
+            { icon: 'fab fa-instagram', label: 'Instagram', color: 'bg-pink-50 text-pink-600 hover:bg-pink-100 border-pink-200/50' },
           ].map(social => (
             <a
               key={social.label}
               href="#"
-              className={`${social.color} text-white text-xs font-medium py-2 px-3 rounded-lg flex items-center gap-2 transition-colors`}
+              className={`${social.color} border text-[11px] font-medium py-2 px-2.5 rounded-lg flex items-center gap-1.5 transition-all duration-200`}
             >
               <i className={social.icon}></i>
               {social.label}
@@ -45,9 +45,9 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
       </div>
 
       {/* Popular Posts */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-700">
-        <h3 className="font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
-          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
+      <div className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
+        <h3 className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+          <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" />
           Popular Posts
         </h3>
         <div className="space-y-3">
@@ -57,23 +57,34 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
               onClick={() => onReadArticle(post.id)}
               className="flex gap-3 w-full text-left group"
             >
-              <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 ring-1 ring-slate-200/60">
                 <img
                   src={post.coverImage}
                   alt={post.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent && !parent.querySelector('.fallback-icon')) {
+                      const fallback = document.createElement('div');
+                      fallback.className = 'fallback-icon w-full h-full flex items-center justify-center';
+                      fallback.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
+                      parent.appendChild(fallback);
+                    }
+                  }}
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
-                  #{index + 1} Trending
+                <span className="text-[10px] font-semibold text-amber-600 tracking-wide">
+                  #{index + 1}
                 </span>
-                <h4 className="text-xs font-semibold text-slate-700 dark:text-slate-200 line-clamp-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                <h4 className="text-[12px] font-medium text-slate-700 line-clamp-2 leading-snug group-hover:text-amber-700 transition-colors duration-200 mt-0.5">
                   {post.title}
                 </h4>
-                <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-1">
-                  <span className="flex items-center gap-0.5"><Eye size={10} />{post.views}</span>
-                  <span className="flex items-center gap-0.5"><Clock size={10} />{post.readTime}m</span>
+                <div className="flex items-center gap-2.5 text-[10px] text-slate-500 mt-1 font-medium">
+                  <span className="flex items-center gap-1"><Eye size={10} strokeWidth={1.5} />{post.views}</span>
+                  <span className="flex items-center gap-1"><Clock size={10} strokeWidth={1.5} />{post.readTime}m</span>
                 </div>
               </div>
             </button>
@@ -81,18 +92,18 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
         </div>
       </div>
 
-      {/* Tags / Labels */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-700">
-        <h3 className="font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
-          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
-          Tags / Labels
+      {/* Tags */}
+      <div className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
+        <h3 className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+          <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" />
+          Tags
         </h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {tags.map(tag => (
             <button
               key={tag}
-              onClick={() => setActiveCategory(tag === 'Book Reviews' ? 'Book Review' : tag === 'Social Issues' ? 'Social Issue' : tag)}
-              className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-amber-100 dark:hover:bg-amber-500/20 hover:text-amber-700 dark:hover:text-amber-400 transition-colors"
+              onClick={() => setActiveCategory(tag)}
+              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 border border-slate-200 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-all duration-200"
             >
               {tag}
             </button>
@@ -101,16 +112,16 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
       </div>
 
       {/* Monthly Archives */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-100 dark:border-slate-700">
-        <h3 className="font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
-          <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
-          Monthly Archives
+      <div className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
+        <h3 className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+          <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" />
+          Archives
         </h3>
-        <ul className="space-y-1.5">
+        <ul className="space-y-1">
           {months.map(month => (
             <li key={month}>
-              <span className="text-sm text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer transition-colors flex items-center gap-2">
-                <i className="fas fa-chevron-right text-[8px] text-amber-500"></i>
+              <span className="text-[12px] text-slate-500 hover:text-amber-700 cursor-pointer transition-colors duration-200 flex items-center gap-2 py-1 font-medium">
+                <span className="w-1 h-1 rounded-full bg-slate-300" />
                 {month}
               </span>
             </li>
@@ -118,18 +129,18 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
         </ul>
       </div>
 
-      {/* Contact / Feedback CTA */}
-      <div className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 shadow-sm text-white">
-        <h3 className="font-bold mb-2 flex items-center gap-2">
-          <i className="fas fa-envelope text-amber-400"></i>
+      {/* Contact CTA */}
+      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-5 ring-1 ring-slate-700/50">
+        <h3 className="text-[13px] font-semibold text-white mb-1.5 flex items-center gap-2">
+          <i className="fas fa-envelope text-amber-400 text-[11px]"></i>
           Share Your Voice
         </h3>
-        <p className="text-sm text-white/70 mb-3">
-          Have a story to share? Want to contribute? Send us a message!
+        <p className="text-[12px] text-slate-400 mb-4 leading-relaxed">
+          Have a story to share or want to contribute? We'd love to hear from you.
         </p>
         <button
           onClick={onContact}
-          className="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors"
+          className="w-full py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 text-[12px] font-semibold rounded-lg transition-all duration-200 shadow-sm shadow-amber-500/20"
         >
           Contact Us
         </button>

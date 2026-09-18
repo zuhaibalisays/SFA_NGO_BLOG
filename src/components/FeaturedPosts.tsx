@@ -13,18 +13,19 @@ export default function FeaturedPosts({ onReadArticle }: FeaturedPostsProps) {
   if (featured.length === 0) return null;
 
   return (
-    <section className="mb-8">
+    <section className="mb-10">
       {/* New Post Ticker */}
       {latestArticle && (
-        <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-2.5 rounded-lg mb-6 flex items-center gap-3 shadow-md">
-          <span className="bg-white text-amber-600 text-xs font-bold px-2 py-0.5 rounded animate-pulse">
-            NEW
+        <div className="flex items-center gap-3 px-4 py-2.5 mb-6 bg-amber-50 border border-amber-200/60 rounded-lg">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md tracking-wide uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            New
           </span>
           <button
             onClick={() => onReadArticle(latestArticle.id)}
-            className="text-sm font-medium hover:underline truncate"
+            className="text-sm font-medium text-slate-700 hover:text-amber-700 transition-colors duration-200 truncate"
           >
-            Latest: {latestArticle.title}
+            {latestArticle.title}
           </button>
         </div>
       )}
@@ -35,48 +36,39 @@ export default function FeaturedPosts({ onReadArticle }: FeaturedPostsProps) {
           <button
             key={article.id}
             onClick={() => onReadArticle(article.id)}
-            className={`group relative rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-left ${
-              index === 0 ? 'md:row-span-1' : ''
-            }`}
+            className="group relative rounded-xl overflow-hidden text-left ring-1 ring-slate-200/80 hover:ring-slate-300 transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-0.5"
           >
             {/* Background Image */}
             <div className="absolute inset-0">
               <img
                 src={article.coverImage}
                 alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
               <div className={`absolute inset-0 ${
                 index === 0
-                  ? 'bg-gradient-to-t from-[#0F172A] via-[#0F172A]/70 to-transparent'
+                  ? 'bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/10'
                   : index === 1
-                  ? 'bg-gradient-to-t from-black/80 via-black/40 to-transparent'
-                  : 'bg-gradient-to-t from-emerald-900/90 via-emerald-900/50 to-transparent'
+                  ? 'bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent'
+                  : 'bg-gradient-to-t from-slate-900/85 via-slate-900/35 to-transparent'
               }`} />
             </div>
 
             {/* Content */}
-            <div className="relative p-5 h-56 md:h-64 flex flex-col justify-end">
-              <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded mb-2 w-fit ${
-                index === 0
-                  ? 'bg-amber-500 text-white'
-                  : index === 1
-                  ? 'bg-white/20 text-white backdrop-blur-sm'
-                  : 'bg-emerald-500 text-white'
-              }`}>
+            <div className="relative p-5 h-56 md:h-60 flex flex-col justify-end">
+              <span className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-md bg-white/15 backdrop-blur-sm text-white/90 mb-2.5 w-fit tracking-wide uppercase border border-white/10">
                 {article.category}
               </span>
-              <h3 className="text-white font-bold text-base md:text-lg leading-snug mb-2 line-clamp-2 group-hover:text-amber-300 transition-colors">
+              <h3 className="text-white font-semibold text-[15px] leading-snug mb-2.5 line-clamp-2 group-hover:text-amber-200 transition-colors duration-200">
                 {article.title}
               </h3>
-              <div className="flex items-center gap-3 text-white/70 text-xs">
-                <span>{article.author}</span>
+              <div className="flex items-center gap-3 text-white/50 text-[11px] font-medium">
                 <span className="flex items-center gap-1">
-                  <Clock size={12} />
+                  <Clock size={11} strokeWidth={1.5} />
                   {article.readTime} min
                 </span>
                 <span className="flex items-center gap-1">
-                  <Eye size={12} />
+                  <Eye size={11} strokeWidth={1.5} />
                   {article.views}
                 </span>
               </div>
