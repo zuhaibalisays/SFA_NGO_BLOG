@@ -3,10 +3,14 @@ import { BlogProvider, useBlog } from './context/BlogContext';
 import Header from './components/Header';
 import FeaturedPosts from './components/FeaturedPosts';
 import BlogFeed from './components/BlogFeed';
+import ArticleCounter from './components/ArticleCounter';
 import Sidebar from './components/Sidebar';
 import ArticleView from './components/ArticleView';
 import AdminDashboard from './components/AdminDashboard';
 import AboutPage from './components/AboutPage';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Disclaimer from './components/Disclaimer';
+import TermsConditions from './components/TermsConditions';
 import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
 
@@ -20,13 +24,11 @@ function AppContent() {
     setCurrentPage(page);
     setSelectedArticleId(null);
     setSearchQuery('');
-
     if (category) {
       setActiveCategory(category);
     } else {
       setActiveCategory('All');
     }
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -44,58 +46,48 @@ function AppContent() {
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (hash) {
-      handleNavigate(hash);
-    }
+    if (hash) handleNavigate(hash);
   }, []);
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header onNavigate={handleNavigate} currentPage={currentPage} />
-
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full" role="main">
-        {/* Article View */}
-        {currentPage === 'article' && selectedArticleId && (
-          <ArticleView articleId={selectedArticleId} onBack={handleBack} />
-        )}
-
-        {/* Admin Dashboard */}
-        {currentPage === 'admin' && (
-          <AdminDashboard />
-        )}
-
-        {/* About Page */}
-        {currentPage === 'about' && (
-          <AboutPage />
-        )}
-
-        {/* Home / Category Pages */}
-        {(currentPage === 'home' || currentPage === 'latest' || currentPage === 'articles' || currentPage === 'book-reviews' || currentPage === 'letters') && (
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'article':
+        return selectedArticleId ? <ArticleView articleId={selectedArticleId} onBack={handleBack} /> : null;
+      case 'admin':
+        return <AdminDashboard />;
+      case 'about':
+        return <AboutPage />;
+      case 'privacy':
+        return <PrivacyPolicy />;
+      case 'disclaimer':
+        return <Disclaimer />;
+      case 'terms':
+        return <TermsConditions />;
+      default:
+        return (
           <>
-            {/* Featured Posts (only on home) */}
-            {currentPage === 'home' && (
-              <FeaturedPosts onReadArticle={handleReadArticle} />
-            )}
-
-            {/* Two Column Layout */}
+            {currentPage === 'home' && <FeaturedPosts onReadArticle={handleReadArticle} />}
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
-              {/* Main Content */}
               <div className="min-w-0">
                 <BlogFeed onReadArticle={handleReadArticle} />
+                <ArticleCounter />
               </div>
-
-              {/* Sidebar */}
               <div className="lg:sticky lg:top-28 lg:self-start">
                 <Sidebar onReadArticle={handleReadArticle} onContact={() => setContactOpen(true)} />
               </div>
             </div>
           </>
-        )}
+        );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <Header onNavigate={handleNavigate} currentPage={currentPage} />
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full" role="main">
+        {renderPage()}
       </main>
-
       <Footer onNavigate={handleNavigate} />
-
-      {/* Contact Modal */}
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
     </div>
   );

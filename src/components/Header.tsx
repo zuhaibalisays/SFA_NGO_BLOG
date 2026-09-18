@@ -40,13 +40,11 @@ export default function Header({ onNavigate, currentPage }: HeaderProps) {
         </div>
       </div>
 
-      {/* Search Bar (Expandable) */}
+      {/* Search Bar */}
       {searchOpen && (
         <div id="search-bar" className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 shadow-sm">
           <div className="max-w-xl mx-auto relative">
-            <label htmlFor="search-input" className="sr-only">
-              Search articles, topics, authors
-            </label>
+            <label htmlFor="search-input" className="sr-only">Search articles, topics, authors</label>
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} strokeWidth={1.5} aria-hidden="true" />
             <input
               id="search-input"
@@ -76,7 +74,6 @@ export default function Header({ onNavigate, currentPage }: HeaderProps) {
       <nav className="bg-[#0F172A] shadow-lg shadow-slate-900/20" aria-label="Primary navigation">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
-            {/* Logo & Brand */}
             <button
               onClick={() => onNavigate('home')}
               className="flex items-center gap-2.5 group"

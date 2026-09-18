@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useBlog } from '../context/BlogContext';
 import { X, Send } from 'lucide-react';
+import { contactSubjects } from '../config/navigation';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -11,12 +12,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const { addContact } = useBlog();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('enquiry');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Focus trap and escape key handling
   useEffect(() => {
     if (isOpen) {
       closeButtonRef.current?.focus();
@@ -24,16 +24,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
+      if (e.key === 'Escape' && isOpen) onClose();
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
@@ -43,21 +39,17 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addContact({ name, email, message });
+    addContact({ name, email, message: `[${contactSubjects.find(s => s.value === subject)?.label}] ${message}` });
     setSent(true);
     setName('');
     setEmail('');
+    setSubject('enquiry');
     setMessage('');
-    setTimeout(() => {
-      setSent(false);
-      onClose();
-    }, 2000);
+    setTimeout(() => { setSent(false); onClose(); }, 2000);
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    if (e.target === e.currentTarget) onClose();
   };
 
   return (
@@ -68,15 +60,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       aria-labelledby="contact-modal-title"
       onClick={handleBackdropClick}
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" aria-hidden="true" />
 
-      {/* Modal */}
-      <div
-        ref={modalRef}
-        className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden ring-1 ring-slate-200/60"
-      >
-        {/* Header */}
+      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden ring-1 ring-slate-200/60">
         <header className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 id="contact-modal-title" className="text-base font-semibold text-slate-800 flex items-center gap-2">
             <Send size={15} className="text-amber-500" aria-hidden="true" />
@@ -92,7 +78,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           </button>
         </header>
 
-        {/* Body */}
         <div className="p-6">
           {sent ? (
             <div className="text-center py-8" role="status">
@@ -100,16 +85,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <span className="text-xl">✓</span>
               </div>
               <h3 className="text-base font-semibold text-slate-800">Message Sent!</h3>
-              <p className="text-[13px] text-slate-500 mt-1">
-                Thank you for reaching out. We'll get back to you soon.
-              </p>
+              <p className="text-[13px] text-slate-500 mt-1">Thank you for reaching out. We'll get back to you soon.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="contact-name" className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                  Your Name
-                </label>
+                <label htmlFor="contact-name" className="block text-[13px] font-medium text-slate-700 mb-1.5">Your Name</label>
                 <input
                   id="contact-name"
                   type="text"
@@ -123,9 +104,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 />
               </div>
               <div>
-                <label htmlFor="contact-email" className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                  Email Address
-                </label>
+                <label htmlFor="contact-email" className="block text-[13px] font-medium text-slate-700 mb-1.5">Email Address</label>
                 <input
                   id="contact-email"
                   type="email"
@@ -139,9 +118,21 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 />
               </div>
               <div>
-                <label htmlFor="contact-message" className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                  Message
-                </label>
+                <label htmlFor="contact-subject" className="block text-[13px] font-medium text-slate-700 mb-1.5">Subject</label>
+                <select
+                  id="contact-subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
+                  aria-required="true"
+                >
+                  {contactSubjects.map(s => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="contact-message" className="block text-[13px] font-medium text-slate-700 mb-1.5">Message</label>
                 <textarea
                   id="contact-message"
                   value={message}
