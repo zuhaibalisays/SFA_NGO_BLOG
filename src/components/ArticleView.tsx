@@ -20,7 +20,7 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
 
   if (!article) {
     return (
-      <div className="text-center py-20">
+      <div className="text-center py-20" role="status">
         <p className="text-sm text-slate-500">Article not found.</p>
         <button onClick={onBack} className="mt-4 text-sm text-amber-600 hover:text-amber-700 font-medium">
           ← Go Back
@@ -90,30 +90,31 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
   };
 
   return (
-    <article className="max-w-3xl mx-auto">
+    <article aria-labelledby="article-title">
       {/* Back Button */}
       <button
         onClick={onBack}
         className="flex items-center gap-1.5 text-[13px] text-slate-400 hover:text-slate-600 mb-8 transition-colors duration-200 font-medium"
+        aria-label="Go back to articles list"
       >
-        <ArrowLeft size={14} strokeWidth={1.5} />
+        <ArrowLeft size={14} strokeWidth={1.5} aria-hidden="true" />
         Back to Articles
       </button>
 
       {/* Article Header */}
       <header className="mb-8">
         <div className="flex items-center gap-2 mb-5">
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/50 tracking-wide uppercase">
+          <span role="tag" className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/50 tracking-wide uppercase">
             {article.category}
           </span>
           {article.tags.slice(0, 2).map(tag => (
-            <span key={tag} className="text-[10px] font-medium px-2 py-0.5 rounded-md text-slate-500 border border-slate-200">
+            <span key={tag} role="tag" className="text-[10px] font-medium px-2 py-0.5 rounded-md text-slate-500 border border-slate-200">
               {tag}
             </span>
           ))}
         </div>
 
-        <h1 className="text-2xl md:text-[32px] font-bold text-slate-900 leading-tight mb-5 tracking-tight">
+        <h1 id="article-title" className="text-2xl md:text-[32px] font-bold text-slate-900 leading-tight mb-5 tracking-tight">
           {article.title}
         </h1>
 
@@ -123,35 +124,41 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
 
         <div className="flex flex-wrap items-center gap-4 text-[12px] text-slate-500 border-t border-b border-slate-100 py-4 font-medium">
           <span className="flex items-center gap-1.5">
-            <User size={13} strokeWidth={1.5} className="text-slate-400" />
-            {article.author}
+            <User size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
+            <span>{article.author}</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <Calendar size={13} strokeWidth={1.5} className="text-slate-400" />
-            {formatDate(article.date)}
+            <Calendar size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
+            <time dateTime={article.date}>{formatDate(article.date)}</time>
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock size={13} strokeWidth={1.5} className="text-slate-400" />
-            {article.readTime} min read
+            <Clock size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
+            <span>{article.readTime} min read</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <Eye size={13} strokeWidth={1.5} className="text-slate-400" />
-            {article.views} views
+            <Eye size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
+            <span>{article.views} views</span>
           </span>
-          <button className="ml-auto flex items-center gap-1.5 text-slate-400 hover:text-amber-600 transition-colors duration-200">
-            <Share2 size={13} strokeWidth={1.5} />
+          <button className="ml-auto flex items-center gap-1.5 text-slate-400 hover:text-amber-600 transition-colors duration-200" aria-label="Share this article">
+            <Share2 size={13} strokeWidth={1.5} aria-hidden="true" />
             Share
           </button>
         </div>
       </header>
 
-      {/* Cover Image */}
+      {/* Cover Image with CLS prevention */}
       <div className="rounded-xl overflow-hidden mb-10 ring-1 ring-slate-200/60">
-        <img
-          src={article.coverImage}
-          alt={article.title}
-          className="w-full h-56 md:h-80 object-cover"
-        />
+        <div className="aspect-featured">
+          <img
+            src={article.coverImage}
+            alt={`Cover image for: ${article.title}`}
+            width={800}
+            height={500}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover"
+          />
+        </div>
       </div>
 
       {/* Article Content */}
@@ -164,7 +171,7 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
         <div className="flex flex-wrap items-center gap-1.5 mb-6">
           <span className="text-[12px] font-medium text-slate-500 mr-1">Tags:</span>
           {article.tags.map(tag => (
-            <span key={tag} className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-slate-200 text-slate-500">
+            <span key={tag} role="tag" className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-slate-200 text-slate-500">
               {tag}
             </span>
           ))}

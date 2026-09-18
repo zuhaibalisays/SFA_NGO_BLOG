@@ -96,32 +96,34 @@ export default function AdminDashboard() {
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
-            <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-sm shadow-amber-500/20">
+            <header className="text-center mb-6">
+              <div className="w-14 h-14 mx-auto bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-sm shadow-amber-500/20" aria-hidden="true">
                 <Lock className="text-white" size={22} />
               </div>
-              <h2 className="text-xl font-bold text-slate-800">Student Writer Login</h2>
+              <h1 className="text-xl font-bold text-slate-800">Student Writer Login</h1>
               <p className="text-sm text-slate-500 mt-1">
                 Access the article editor to create and manage posts
               </p>
-            </div>
+            </header>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                <label htmlFor="admin-password" className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Writer Passcode
                 </label>
                 <input
+                  id="admin-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter admin passcode"
                   className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                   required
+                  autoComplete="current-password"
                 />
               </div>
               {loginError && (
-                <p className="text-red-500 text-[13px]">{loginError}</p>
+                <p className="text-red-500 text-[13px]" role="alert">{loginError}</p>
               )}
               <button
                 type="submit"
@@ -142,12 +144,12 @@ export default function AdminDashboard() {
 
   // Dashboard
   return (
-    <div className="max-w-6xl mx-auto">
+    <section aria-labelledby="dashboard-heading">
       {/* Dashboard Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <header className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <FileText className="text-amber-500" size={20} />
+          <h1 id="dashboard-heading" className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <FileText className="text-amber-500" size={20} aria-hidden="true" />
             Writer Dashboard
           </h1>
           <p className="text-[13px] text-slate-500 mt-0.5">Create, edit, and manage articles</p>
@@ -155,14 +157,15 @@ export default function AdminDashboard() {
         <button
           onClick={adminLogout}
           className="flex items-center gap-1.5 px-3.5 py-2 bg-red-50 text-red-600 rounded-lg text-[12px] font-medium hover:bg-red-100 transition-colors duration-200 ring-1 ring-red-200/50"
+          aria-label="Logout from dashboard"
         >
-          <LogOut size={14} />
+          <LogOut size={14} aria-hidden="true" />
           Logout
         </button>
-      </div>
+      </header>
 
       {/* Tabs */}
-      <div className="flex gap-1.5 mb-6 bg-slate-100 p-1 rounded-lg w-fit">
+      <div className="flex gap-1.5 mb-6 bg-slate-100 p-1 rounded-lg w-fit" role="tablist" aria-label="Dashboard tabs">
         <button
           onClick={() => setActiveTab('create')}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-[13px] font-medium transition-all duration-200 ${
@@ -170,8 +173,11 @@ export default function AdminDashboard() {
               ? 'bg-white text-slate-800 shadow-sm'
               : 'text-slate-500 hover:text-slate-700'
           }`}
+          role="tab"
+          aria-selected={activeTab === 'create'}
+          aria-controls="create-panel"
         >
-          <Plus size={14} />
+          <Plus size={14} aria-hidden="true" />
           {editingId ? 'Edit Article' : 'Create New'}
         </button>
         <button
@@ -181,45 +187,51 @@ export default function AdminDashboard() {
               ? 'bg-white text-slate-800 shadow-sm'
               : 'text-slate-500 hover:text-slate-700'
           }`}
+          role="tab"
+          aria-selected={activeTab === 'manage'}
+          aria-controls="manage-panel"
         >
-          <Eye size={14} />
+          <Eye size={14} aria-hidden="true" />
           Manage ({articles.length})
         </button>
       </div>
 
       {/* Success Message */}
       {successMsg && (
-        <div className="bg-emerald-50 border border-emerald-200/60 text-emerald-700 px-4 py-3 rounded-lg mb-4 text-[13px] font-medium">
+        <div className="bg-emerald-50 border border-emerald-200/60 text-emerald-700 px-4 py-3 rounded-lg mb-4 text-[13px] font-medium" role="status">
           ✓ {successMsg}
         </div>
       )}
 
       {/* Create/Edit Form */}
       {activeTab === 'create' && (
-        <div className="bg-white rounded-xl shadow-sm ring-1 ring-slate-100 p-6">
+        <div id="create-panel" role="tabpanel" aria-labelledby="create-tab" className="bg-white rounded-xl shadow-sm ring-1 ring-slate-100 p-6">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Title */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                  Article Title *
+                <label htmlFor="article-title" className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                  Article Title <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="article-title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter article title"
                   className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
                   required
+                  aria-required="true"
                 />
               </div>
 
               {/* Author */}
               <div>
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                <label htmlFor="article-author" className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Author Name
                 </label>
                 <input
+                  id="article-author"
                   type="text"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
@@ -229,13 +241,16 @@ export default function AdminDashboard() {
 
               {/* Category */}
               <div>
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                  Category *
+                <label htmlFor="article-category" className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                  Category <span aria-hidden="true">*</span>
                 </label>
                 <select
+                  id="article-category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value as Category)}
                   className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200"
+                  required
+                  aria-required="true"
                 >
                   {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -245,10 +260,11 @@ export default function AdminDashboard() {
 
               {/* Cover Image URL */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                <label htmlFor="article-image" className="block text-[13px] font-medium text-slate-700 mb-1.5">
                   Cover Image URL
                 </label>
                 <input
+                  id="article-image"
                   type="url"
                   value={coverImage}
                   onChange={(e) => setCoverImage(e.target.value)}
@@ -259,16 +275,18 @@ export default function AdminDashboard() {
 
               {/* Excerpt */}
               <div className="md:col-span-2">
-                <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                  Excerpt / Summary *
+                <label htmlFor="article-excerpt" className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                  Excerpt / Summary <span aria-hidden="true">*</span>
                 </label>
                 <textarea
+                  id="article-excerpt"
                   value={excerpt}
                   onChange={(e) => setExcerpt(e.target.value)}
                   placeholder="Brief summary of the article (shown in article cards)"
                   rows={2}
                   className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-none transition-all duration-200"
                   required
+                  aria-required="true"
                 />
               </div>
 
@@ -290,16 +308,18 @@ export default function AdminDashboard() {
 
             {/* Content */}
             <div>
-              <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                Article Content * <span className="text-slate-400 font-normal">(Markdown: ## Headings, **bold**, - lists, &gt; quotes)</span>
+              <label htmlFor="article-content" className="block text-[13px] font-medium text-slate-700 mb-1.5">
+                Article Content <span aria-hidden="true">*</span> <span className="text-slate-400 font-normal">(Markdown: ## Headings, **bold**, - lists, &gt; quotes)</span>
               </label>
               <textarea
+                id="article-content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={'Write your article content here...\n\nUse ## for headings\nUse **text** for bold\nUse - for bullet points\nUse > for quotes'}
                 rows={14}
                 className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-y font-mono leading-relaxed transition-all duration-200"
                 required
+                aria-required="true"
               />
             </div>
 
@@ -309,7 +329,7 @@ export default function AdminDashboard() {
                 type="submit"
                 className="flex items-center gap-1.5 px-5 py-2.5 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-400 transition-colors duration-200 shadow-sm shadow-amber-500/20"
               >
-                <Save size={14} />
+                <Save size={14} aria-hidden="true" />
                 {editingId ? 'Update Article' : 'Publish Article'}
               </button>
               {editingId && (
@@ -328,16 +348,16 @@ export default function AdminDashboard() {
 
       {/* Manage Articles */}
       {activeTab === 'manage' && (
-        <div className="bg-white rounded-xl shadow-sm ring-1 ring-slate-100 overflow-hidden">
+        <div id="manage-panel" role="tabpanel" aria-labelledby="manage-tab" className="bg-white rounded-xl shadow-sm ring-1 ring-slate-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-50 border-b border-slate-100">
                 <tr>
-                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Title</th>
-                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Category</th>
-                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Date</th>
-                  <th className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Views</th>
-                  <th className="text-right px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+                  <th scope="col" className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Title</th>
+                  <th scope="col" className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Category</th>
+                  <th scope="col" className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Date</th>
+                  <th scope="col" className="text-left px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Views</th>
+                  <th scope="col" className="text-right px-5 py-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -352,23 +372,25 @@ export default function AdminDashboard() {
                         {article.category}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-[12px] text-slate-500 hidden sm:table-cell">{article.date}</td>
+                    <td className="px-5 py-3.5 text-[12px] text-slate-500 hidden sm:table-cell">
+                      <time dateTime={article.date}>{article.date}</time>
+                    </td>
                     <td className="px-5 py-3.5 text-[12px] text-slate-500 hidden lg:table-cell">{article.views}</td>
                     <td className="px-5 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => handleEdit(article)}
                           className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-150"
-                          title="Edit"
+                          aria-label={`Edit article: ${article.title}`}
                         >
-                          <Edit3 size={14} />
+                          <Edit3 size={14} aria-hidden="true" />
                         </button>
                         <button
                           onClick={() => handleDelete(article.id)}
                           className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors duration-150"
-                          title="Delete"
+                          aria-label={`Delete article: ${article.title}`}
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={14} aria-hidden="true" />
                         </button>
                       </div>
                     </td>
@@ -379,6 +401,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

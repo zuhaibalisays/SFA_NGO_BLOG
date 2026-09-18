@@ -16,26 +16,15 @@ function AppContent() {
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [contactOpen, setContactOpen] = useState(false);
 
-  const handleNavigate = (page: string) => {
+  const handleNavigate = (page: string, category?: string) => {
     setCurrentPage(page);
     setSelectedArticleId(null);
     setSearchQuery('');
 
-    switch (page) {
-      case 'articles':
-        setActiveCategory('Articles');
-        break;
-      case 'book-reviews':
-        setActiveCategory('Book Reviews');
-        break;
-      case 'letters':
-        setActiveCategory('Letters');
-        break;
-      case 'latest':
-        setActiveCategory('All');
-        break;
-      default:
-        setActiveCategory('All');
+    if (category) {
+      setActiveCategory(category);
+    } else {
+      setActiveCategory('All');
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -50,6 +39,7 @@ function AppContent() {
   const handleBack = () => {
     setSelectedArticleId(null);
     setCurrentPage('home');
+    setActiveCategory('All');
   };
 
   useEffect(() => {
@@ -63,7 +53,7 @@ function AppContent() {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Header onNavigate={handleNavigate} currentPage={currentPage} />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full" role="main">
         {/* Article View */}
         {currentPage === 'article' && selectedArticleId && (
           <ArticleView articleId={selectedArticleId} onBack={handleBack} />
@@ -103,7 +93,7 @@ function AppContent() {
         )}
       </main>
 
-      <Footer />
+      <Footer onNavigate={handleNavigate} />
 
       {/* Contact Modal */}
       <ContactModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
