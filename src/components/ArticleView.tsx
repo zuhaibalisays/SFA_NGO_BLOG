@@ -46,42 +46,42 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
   const renderContent = (content: string) => {
     return content.split('\n').map((line, i) => {
       if (line.startsWith('## ')) {
-        return <h2 key={i} className="text-xl md:text-[22px] font-bold text-slate-900 mt-10 mb-4 tracking-tight">{line.replace('## ', '')}</h2>;
+        return <h2 key={i} className="text-xl md:text-[22px] font-bold text-slate-900 dark:text-slate-100 mt-10 mb-4 tracking-tight">{line.replace('## ', '')}</h2>;
       }
       if (line.startsWith('### ')) {
-        return <h3 key={i} className="text-base font-semibold text-slate-800 mt-7 mb-3">{line.replace('### ', '')}</h3>;
+        return <h3 key={i} className="text-base font-semibold text-slate-800 dark:text-slate-200 mt-7 mb-3">{line.replace('### ', '')}</h3>;
       }
       if (line.startsWith('> ')) {
         return (
-          <blockquote key={i} className="border-l-2 border-amber-400 bg-amber-50/50 pl-5 py-4 my-5 italic text-slate-600 rounded-r-lg text-[15px] leading-relaxed">
+          <blockquote key={i} className="border-l-2 border-amber-400 bg-amber-50/50 dark:bg-slate-800 pl-5 py-4 my-5 italic text-slate-600 dark:text-slate-300 rounded-r-lg leading-relaxed">
             {line.replace('> ', '')}
           </blockquote>
         );
       }
       if (line.startsWith('- ') || line.startsWith('* ')) {
         return (
-          <li key={i} className="ml-4 text-slate-600 list-disc mb-1.5 text-[15px] leading-relaxed">
+          <li key={i} className="ml-4 text-slate-600 dark:text-slate-300 list-disc mb-1.5 leading-relaxed">
             {renderInlineFormatting(line.replace(/^[-*] /, ''))}
           </li>
         );
       }
       if (/^\d+\./.test(line)) {
         return (
-          <li key={i} className="ml-4 text-slate-600 list-decimal mb-1.5 text-[15px] leading-relaxed">
+          <li key={i} className="ml-4 text-slate-600 dark:text-slate-300 list-decimal mb-1.5 leading-relaxed">
             {renderInlineFormatting(line.replace(/^\d+\.\s*/, ''))}
           </li>
         );
       }
       if (line.startsWith('---')) {
-        return <hr key={i} className="my-8 border-slate-200" />;
+        return <hr key={i} className="my-8 border-slate-200 dark:border-slate-700" />;
       }
       if (line.startsWith('⭐') || line.startsWith('🏆')) {
-        return <p key={i} className="text-[15px] my-3">{line}</p>;
+        return <p key={i} className="my-3">{line}</p>;
       }
       if (line.trim() === '') {
         return <br key={i} />;
       }
-      return <p key={i} className="text-slate-600 leading-[1.8] mb-3 text-[15px]">{renderInlineFormatting(line)}</p>;
+      return <p key={i} className="text-slate-600 dark:text-slate-300 leading-[1.8] mb-3">{renderInlineFormatting(line)}</p>;
     });
   };
 
@@ -89,7 +89,7 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
     const parts = text.split(/(\*\*[^*]+\*\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="font-semibold text-slate-800">{part.slice(2, -2)}</strong>;
+        return <strong key={i} className="font-semibold text-slate-800 dark:text-amber-400">{part.slice(2, -2)}</strong>;
       }
       return <span key={i}>{part}</span>;
     });
@@ -110,25 +110,25 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
       {/* Article Header */}
       <header className="mb-8">
         <div className="flex items-center gap-2 mb-5">
-          <span role="tag" className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 border border-amber-200/50 tracking-wide uppercase">
+          <span role="tag" className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200/50 dark:border-amber-500/20 tracking-wide uppercase">
             {article.category}
           </span>
           {article.tags.slice(0, 2).map(tag => (
-            <span key={tag} role="tag" className="text-[10px] font-medium px-2 py-0.5 rounded-md text-slate-500 border border-slate-200">
+            <span key={tag} role="tag" className="text-[10px] font-medium px-2 py-0.5 rounded-md text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
               {tag}
             </span>
           ))}
         </div>
 
-        <h1 id="article-title" className="text-2xl md:text-[32px] font-bold text-slate-900 leading-tight mb-5 tracking-tight">
+        <h1 id="article-title" className="text-2xl md:text-[32px] font-bold text-slate-900 dark:text-slate-100 leading-tight mb-5 tracking-tight">
           {article.title}
         </h1>
 
-        <p className="text-base md:text-[17px] text-slate-500 mb-7 leading-relaxed">
+        <p className="text-base md:text-[17px] text-slate-500 dark:text-slate-400 mb-7 leading-relaxed">
           {article.excerpt}
         </p>
 
-        <div className="flex flex-wrap items-center gap-4 text-[12px] text-slate-500 border-t border-b border-slate-100 py-4 font-medium">
+        <div className="flex flex-wrap items-center gap-4 text-[12px] text-slate-500 dark:text-slate-400 border-t border-b border-slate-100 dark:border-slate-700 py-4 font-medium">
           <span className="flex items-center gap-1.5">
             <User size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
             <span>{article.author}</span>
@@ -210,18 +210,18 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
       </div>
 
       {/* Article Footer */}
-      <footer className="mt-14 pt-8 border-t border-slate-100">
+      <footer className="mt-14 pt-8 border-t border-slate-100 dark:border-slate-700">
         <div className="flex flex-wrap items-center gap-1.5 mb-6">
-          <span className="text-[12px] font-medium text-slate-500 mr-1">Tags:</span>
+          <span className="text-[12px] font-medium text-slate-500 dark:text-slate-400 mr-1">Tags:</span>
           {article.tags.map(tag => (
-            <span key={tag} role="tag" className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-slate-200 text-slate-500">
+            <span key={tag} role="tag" className="text-[11px] font-medium px-2.5 py-1 rounded-md border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
               {tag}
             </span>
           ))}
         </div>
-        <div className="bg-slate-50 rounded-xl p-5 ring-1 ring-slate-100">
-          <p className="text-[13px] text-slate-500 leading-relaxed">
-            <strong className="text-slate-700">Written by {article.author}</strong> — Published as part of SFA Daily Articles,
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-5 ring-1 ring-slate-100 dark:ring-slate-700">
+          <p className="text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed">
+            <strong className="text-slate-700 dark:text-slate-200">Written by {article.author}</strong> — Published as part of SFA Daily Articles,
             a student publishing initiative by the School-for-All Welfare Organization in Turbat, Balochistan.
           </p>
         </div>
