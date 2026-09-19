@@ -208,7 +208,7 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
         onClose={() => setShareModalOpen(false)}
         articleTitle={article.title}
         articleAuthor={article.author}
-        articleUrl={window.location.href}
+        articleUrl={typeof window !== 'undefined' ? window.location.href : ''}
       />
     </article>
   );

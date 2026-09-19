@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useBlog } from '../context/BlogContext';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, Moon, Sun } from 'lucide-react';
 import { primaryNavLinks } from '../config/navigation';
 
 interface HeaderProps {
@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onNavigate, currentPage }: HeaderProps) {
-  const { searchQuery, setSearchQuery } = useBlog();
+  const { searchQuery, setSearchQuery, isDarkMode, toggleDarkMode } = useBlog();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -28,15 +28,25 @@ export default function Header({ onNavigate, currentPage }: HeaderProps) {
           <time dateTime={new Date().toISOString().split('T')[0]} className="text-[11px] tracking-wide text-slate-400 font-medium">
             {today}
           </time>
-          <button
-            onClick={() => setSearchOpen(!searchOpen)}
-            className="flex items-center gap-1.5 text-[11px] tracking-wide text-slate-400 hover:text-amber-400 transition-colors duration-200"
-            aria-expanded={searchOpen}
-            aria-controls="search-bar"
-          >
-            <Search size={12} strokeWidth={2} aria-hidden="true" />
-            <span className="hidden sm:inline">Search</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleDarkMode}
+              className="flex items-center gap-1.5 text-[11px] tracking-wide text-slate-400 hover:text-amber-400 transition-colors duration-200"
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDarkMode ? <Sun size={12} strokeWidth={2} aria-hidden="true" /> : <Moon size={12} strokeWidth={2} aria-hidden="true" />}
+              <span className="hidden sm:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
+            </button>
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="flex items-center gap-1.5 text-[11px] tracking-wide text-slate-400 hover:text-amber-400 transition-colors duration-200"
+              aria-expanded={searchOpen}
+              aria-controls="search-bar"
+            >
+              <Search size={12} strokeWidth={2} aria-hidden="true" />
+              <span className="hidden sm:inline">Search</span>
+            </button>
+          </div>
         </div>
       </div>
 

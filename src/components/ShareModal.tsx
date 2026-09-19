@@ -16,11 +16,28 @@ export default function ShareModal({ isOpen, onClose, articleTitle, articleAutho
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(articleUrl);
+      // Ensure we're copying the full URL
+      const urlToCopy = articleUrl.startsWith('http') ? articleUrl : `${window.location.origin}${articleUrl}`;
+      await navigator.clipboard.writeText(urlToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = articleUrl;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (fallbackErr) {
+        console.error('Fallback copy failed:', fallbackErr);
+      }
+      document.body.removeChild(textArea);
     }
   };
 

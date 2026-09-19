@@ -27,6 +27,7 @@ interface BlogContextType {
   searchQuery: string;
   activeCategory: string;
   activeLanguage: string;
+  isDarkMode: boolean;
   isAdminLoggedIn: boolean;
   contacts: ContactMessage[];
   securityState: SecurityState | null;
@@ -34,6 +35,7 @@ interface BlogContextType {
   setSearchQuery: (query: string) => void;
   setActiveCategory: (category: string) => void;
   setActiveLanguage: (language: string) => void;
+  toggleDarkMode: () => void;
   addArticle: (article: Omit<Article, 'id' | 'date' | 'views'>) => void;
   updateArticle: (id: string, article: Partial<Article>) => void;
   deleteArticle: (id: string) => void;
@@ -98,6 +100,10 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeLanguage, setActiveLanguage] = useState('All');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('sfa_dark_mode');
+    return saved === 'true';
+  });
   const [auditLog, setAuditLog] = useState<AuditEvent[]>(() => getAuditLog());
 
   // Persist state changes
@@ -106,6 +112,13 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (securityState) localStorage.setItem(SECURITY_KEY, JSON.stringify(securityState));
   }, [securityState]);
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
   useEffect(() => { setAuditLog(getAuditLog()); }, []);
 
   // Initialize default security state if none exists
@@ -215,6 +228,14 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   const incrementViews = useCallback((id: string) => {
     setArticles(prev => prev.map(a => a.id === id ? { ...a, views: a.views + 1 } : a));
+  }, []);
+
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkMode(prev => {
+      const newValue = !prev;
+      localStorage.setItem('sfa_dark_mode', String(newValue));
+      return newValue;
+    });
   }, []);
 
   // ============ SECURITY OPERATIONS ============
@@ -380,9 +401,9 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <BlogContext.Provider value={{
-      articles, filteredArticles, searchQuery, activeCategory, activeLanguage,
+      articles, filteredArticles, searchQuery, activeCategory, activeLanguage, isDarkMode,
       isAdminLoggedIn, contacts, securityState, auditLog,
-      setSearchQuery, setActiveCategory, setActiveLanguage,
+      setSearchQuery, setActiveCategory, setActiveLanguage, toggleDarkMode,
       addArticle, updateArticle, deleteArticle,
       adminLogin, adminLogout, addContact, incrementViews,
       setupInitialAccount, setupTOTP, verifyAndEnableTOTP, disableTOTP,
