@@ -16,14 +16,14 @@ export default function FeaturedPosts({ onReadArticle }: FeaturedPostsProps) {
     <section aria-labelledby="featured-heading" className="mb-10">
       {/* New Post Ticker */}
       {latestArticle && (
-        <div className="flex items-center gap-3 px-4 py-2.5 mb-6 bg-amber-50 border border-amber-200/60 rounded-lg">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md tracking-wide uppercase" aria-hidden="true">
+        <div className="flex items-center gap-3 px-4 py-2.5 mb-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200/60 dark:border-amber-500/20 rounded-lg transition-colors duration-300">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 rounded-md tracking-wide uppercase" aria-hidden="true">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
             New
           </span>
           <button
             onClick={() => onReadArticle(latestArticle.id)}
-            className="text-sm font-medium text-slate-700 hover:text-amber-700 transition-colors duration-200 truncate"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-amber-700 dark:hover:text-amber-400 transition-colors duration-200 truncate"
             aria-label={`Read latest article: ${latestArticle.title}`}
           >
             {latestArticle.title}
@@ -37,7 +37,7 @@ export default function FeaturedPosts({ onReadArticle }: FeaturedPostsProps) {
         {featured.map((article, index) => (
           <article
             key={article.id}
-            className="group relative rounded-xl overflow-hidden text-left ring-1 ring-slate-200/80 hover:ring-slate-300 transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-0.5"
+            className="group relative rounded-xl overflow-hidden text-left ring-1 ring-slate-200/80 dark:ring-slate-700 hover:ring-slate-300 dark:hover:ring-slate-600 transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/50 dark:hover:shadow-slate-900/50 hover:-translate-y-0.5"
           >
             <button
               onClick={() => onReadArticle(article.id)}

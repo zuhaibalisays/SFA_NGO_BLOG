@@ -1,10 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useBlog } from '../context/BlogContext';
-import { Article, Category } from '../types';
-import { Lock, LogOut, Plus, Edit3, Trash2, Save, FileText, Eye, Shield, Key, RefreshCw, AlertTriangle, Download, Copy, Check, ChevronLeft } from 'lucide-react';
+import { Article, Category, ArticleLanguage, ArticleFont } from '../types';
+import { Lock, LogOut, Plus, Edit3, Trash2, Save, FileText, Eye, Shield, Key, RefreshCw, AlertTriangle, Download, Copy, Check, ChevronLeft, Heading, Bold, Quote } from 'lucide-react';
 import { formatRetryAfter } from '../security';
 
 const categories: Category[] = ['Articles', 'Book Reviews', 'Letters', 'Social Issues', 'Stories', 'Weekly Reports', 'Motivational'];
+
+const languages: ArticleLanguage[] = ['English', 'Balochi', 'Urdu'];
+
+const fonts: { value: ArticleFont; label: string; rtl: boolean }[] = [
+  { value: 'Inter', label: 'Inter (English)', rtl: false },
+  { value: 'Noto Naskh Arabic', label: 'Noto Naskh Arabic (Balochi/Arabic)', rtl: true },
+  { value: 'Vazirmatn', label: 'Vazirmatn (Balochi/Arabic)', rtl: true },
+  { value: 'Scheherazade New', label: 'Scheherazade New (Arabic)', rtl: true },
+  { value: 'Amiri', label: 'Amiri (Arabic)', rtl: true },
+  { value: 'Noto Nastaliq Urdu', label: 'Noto Nastaliq Urdu (Urdu)', rtl: true },
+];
 
 type DashboardView = 'login' | 'mfa' | 'forgot' | 'recovery-code' | 'recovery-key' | 'recovery-new-password' | 'dashboard' | 'security';
 
@@ -33,6 +44,11 @@ export default function AdminDashboard() {
   const [content, setContent] = useState('');
   const [featured, setFeatured] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  const [language, setLanguage] = useState<ArticleLanguage>('English');
+  const [font, setFont] = useState<ArticleFont>('Inter');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
+  const contentRef = useRef<HTMLTextAreaElement>(null);
 
   // Security setup state
   const [totpUri, setTotpUri] = useState('');
@@ -57,6 +73,17 @@ export default function AdminDashboard() {
       return () => clearInterval(timer);
     }
   }, [retryAfter]);
+
+  // Reset view when logged out
+  useEffect(() => {
+    if (!isAdminLoggedIn) {
+      setView('login');
+      setPassword('');
+      setTotpCode('');
+      setLoginError('');
+      setRetryAfter(undefined);
+    }
+  }, [isAdminLoggedIn]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,21 +231,105 @@ export default function AdminDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  // Markdown formatting helpers
+  const insertMarkdown = (prefix: string, suffix: string = '') => {
+    const textarea = contentRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const before = content.substring(0, start);
+    const after = content.substring(end);
+
+    // For line-level formatting (heading, quote), ensure we're at the start of a line
+    if (prefix === '## ' || prefix === '> ') {
+      const lineStart = before.lastIndexOf('\n') + 1;
+      const currentLine = before.substring(lineStart);
+      
+      if (currentLine === '' || currentLine === '\n') {
+        // Already at start of line
+        const newContent = before + prefix + selectedText + suffix + after;
+        setContent(newContent);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+        }, 0);
+      } else {
+        // Need to add a new line
+        const newContent = before + '\n' + prefix + selectedText + suffix + after;
+        setContent(newContent);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 1 + prefix.length, start + 1 + prefix.length + selectedText.length);
+        }, 0);
+      }
+    } else {
+      // Inline formatting (bold, italic)
+      const newContent = before + prefix + selectedText + suffix + after;
+      setContent(newContent);
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+      }, 0);
+    }
+  };
+
+  const handleHeading = () => insertMarkdown('## ');
+  const handleBold = () => insertMarkdown('**', '**');
+  const handleQuote = () => insertMarkdown('> ');
+
+  // Tag management
+  const addTag = (tag: string) => {
+    const trimmed = tag.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter(t => t !== tagToRemove));
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag(tagInput);
+    } else if (e.key === 'Backspace' && tagInput === '' && tags.length > 0) {
+      removeTag(tags[tags.length - 1]);
+    }
+  };
+
+  // Auto-update font when language changes
+  useEffect(() => {
+    if (language === 'Balochi') {
+      setFont('Noto Naskh Arabic');
+    } else if (language === 'Urdu') {
+      setFont('Noto Nastaliq Urdu');
+    } else {
+      setFont('Inter');
+    }
+  }, [language]);
+
   const resetForm = () => {
     setTitle(''); setAuthor('SFA Student Writer'); setCategory('Articles');
     setCoverImage(''); setExcerpt(''); setContent(''); setFeatured(false);
     setEditingId(null); setSuccessMsg('');
+    setLanguage('English'); setFont('Inter');
+    setTags([]); setTagInput('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !content || !excerpt) { setSuccessMsg('Please fill in all required fields.'); return; }
     const readTime = Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
+    const articleTags = tags.length > 0 ? tags : [category];
     if (editingId) {
-      updateArticle(editingId, { title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category] });
+      updateArticle(editingId, { title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: articleTags, language, font });
       setSuccessMsg('Article updated!');
     } else {
-      addArticle({ title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category] });
+      addArticle({ title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: articleTags, language, font });
       setSuccessMsg('Article published!');
     }
     resetForm();
@@ -229,6 +340,8 @@ export default function AdminDashboard() {
     setTitle(article.title); setAuthor(article.author); setCategory(article.category);
     setCoverImage(article.coverImage); setExcerpt(article.excerpt); setContent(article.content);
     setFeatured(article.featured); setEditingId(article.id); setActiveTab('create');
+    setLanguage(article.language || 'English'); setFont(article.font || 'Inter');
+    setTags(article.tags || []); setTagInput('');
   };
 
   const handleDelete = (id: string) => {
@@ -240,20 +353,20 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm ring-1 ring-slate-200 dark:ring-slate-700 p-8 transition-colors duration-300">
             <header className="text-center mb-6">
               <div className="w-14 h-14 mx-auto bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-sm shadow-amber-500/20" aria-hidden="true">
                 <Shield className="text-white" size={22} />
               </div>
-              <h1 className="text-xl font-bold text-slate-800">Writer Login</h1>
-              <p className="text-[13px] text-slate-500 mt-1">Secure access to the article editor</p>
+              <h1 className="text-xl font-bold text-slate-800 dark:text-white">Writer Login</h1>
+              <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-1">Secure access to the article editor</p>
             </header>
 
-            {successMsg && <div className="bg-emerald-50 border border-emerald-200/60 text-emerald-700 px-4 py-2.5 rounded-lg mb-4 text-[13px]" role="status">{successMsg}</div>}
+            {successMsg && <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/60 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-2.5 rounded-lg mb-4 text-[13px]" role="status">{successMsg}</div>}
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label htmlFor="login-password" className="block text-[13px] font-medium text-slate-700 mb-1.5">Password</label>
+                <label htmlFor="login-password" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
                 <input
                   id="login-password"
                   type="password"
@@ -261,30 +374,30 @@ export default function AdminDashboard() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   disabled={!!retryAfter}
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200 disabled:opacity-50"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200 disabled:opacity-50"
                   required
                   autoComplete="current-password"
                 />
               </div>
-              {loginError && <p className="text-red-500 text-[13px]" role="alert">{loginError}</p>}
+              {loginError && <p className="text-red-500 dark:text-red-400 text-[13px]" role="alert">{loginError}</p>}
               {retryAfter && retryAfter > 0 && (
-                <p className="text-amber-600 text-[12px] flex items-center gap-1.5" role="status">
+                <p className="text-amber-600 dark:text-amber-400 text-[12px] flex items-center gap-1.5" role="status">
                   <AlertTriangle size={13} /> Too many attempts. Wait {formatRetryAfter(retryAfter)}.
                 </p>
               )}
               <button
                 type="submit"
                 disabled={!!retryAfter}
-                className="w-full py-2.5 bg-slate-800 text-white rounded-lg font-medium text-sm hover:bg-slate-700 transition-colors duration-200 disabled:opacity-50"
+                className="w-full py-2.5 bg-slate-800 dark:bg-amber-500 text-white dark:text-slate-900 rounded-lg font-medium text-sm hover:bg-slate-700 dark:hover:bg-amber-400 transition-colors duration-200 disabled:opacity-50"
               >
                 Sign In
               </button>
             </form>
 
-            <div className="mt-4 pt-4 border-t border-slate-100">
+            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
               <button
                 onClick={() => { setView('forgot'); setLoginError(''); }}
-                className="w-full text-center text-[12px] text-slate-500 hover:text-amber-600 transition-colors duration-200 font-medium"
+                className="w-full text-center text-[12px] text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-200 font-medium"
               >
                 Forgot Password?
               </button>
@@ -497,6 +610,18 @@ export default function AdminDashboard() {
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
+              <div>
+                <label htmlFor="art-lang" className="block text-[13px] font-medium text-slate-700 mb-1.5">Language</label>
+                <select id="art-lang" value={language} onChange={(e) => setLanguage(e.target.value as ArticleLanguage)} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400">
+                  {languages.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="art-font" className="block text-[13px] font-medium text-slate-700 mb-1.5">Font Style</label>
+                <select id="art-font" value={font} onChange={(e) => setFont(e.target.value as ArticleFont)} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400">
+                  {fonts.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                </select>
+              </div>
               <div className="md:col-span-2">
                 <label htmlFor="art-img" className="block text-[13px] font-medium text-slate-700 mb-1.5">Cover Image URL</label>
                 <input id="art-img" type="url" value={coverImage} onChange={(e) => setCoverImage(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400" />
@@ -504,6 +629,35 @@ export default function AdminDashboard() {
               <div className="md:col-span-2">
                 <label htmlFor="art-exc" className="block text-[13px] font-medium text-slate-700 mb-1.5">Excerpt *</label>
                 <textarea id="art-exc" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-none" required />
+              </div>
+              <div className="md:col-span-2">
+                <label htmlFor="art-tags" className="block text-[13px] font-medium text-slate-700 mb-1.5">Tags</label>
+                <div className="flex flex-wrap gap-1.5 p-2.5 rounded-lg border border-slate-200 bg-slate-50 min-h-[42px]">
+                  {tags.map(tag => (
+                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-amber-100 text-amber-800 text-[11px] font-medium">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="hover:text-amber-900 transition-colors"
+                        aria-label={`Remove tag ${tag}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    id="art-tags"
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    onBlur={() => tagInput && addTag(tagInput)}
+                    placeholder={tags.length === 0 ? "Type a tag and press Enter or comma" : "Add more tags..."}
+                    className="flex-1 min-w-[120px] bg-transparent text-slate-800 text-sm focus:outline-none placeholder:text-slate-400"
+                  />
+                </div>
+                <p className="text-[11px] text-slate-400 mt-1">Press Enter or comma to add a tag. Click × to remove.</p>
               </div>
               <div className="md:col-span-2">
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -514,7 +668,51 @@ export default function AdminDashboard() {
             </div>
             <div>
               <label htmlFor="art-content" className="block text-[13px] font-medium text-slate-700 mb-1.5">Content * <span className="text-slate-400 font-normal">(Markdown supported)</span></label>
-              <textarea id="art-content" value={content} onChange={(e) => setContent(e.target.value)} rows={14} className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-y" required />
+              {/* Formatting Toolbar */}
+              <div className="flex items-center gap-1 mb-2 p-1.5 bg-slate-50 border border-slate-200 rounded-t-lg">
+                <button
+                  type="button"
+                  onClick={handleHeading}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-white hover:text-slate-800 rounded transition-colors"
+                  title="Heading (## )"
+                >
+                  <Heading size={14} />
+                  <span>Heading</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBold}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-white hover:text-slate-800 rounded transition-colors"
+                  title="Bold (**text**)"
+                >
+                  <Bold size={14} />
+                  <span>Bold</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleQuote}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-white hover:text-slate-800 rounded transition-colors"
+                  title="Quote (> )"
+                >
+                  <Quote size={14} />
+                  <span>Quote</span>
+                </button>
+                <div className="w-px h-4 bg-slate-300 mx-1" />
+                <span className="text-[10px] text-slate-400 px-2">
+                  {language === 'English' ? 'LTR' : 'RTL'} · {font}
+                </span>
+              </div>
+              <textarea
+                ref={contentRef}
+                id="art-content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={14}
+                dir={fonts.find(f => f.value === font)?.rtl ? 'rtl' : 'ltr'}
+                style={{ fontFamily: font, textAlign: fonts.find(f => f.value === font)?.rtl ? 'right' : 'left' }}
+                className="w-full px-4 py-3 rounded-b-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-y"
+                required
+              />
             </div>
             <div className="flex gap-2.5">
               <button type="submit" className="flex items-center gap-1.5 px-5 py-2.5 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-400 transition-colors shadow-sm shadow-amber-500/20">

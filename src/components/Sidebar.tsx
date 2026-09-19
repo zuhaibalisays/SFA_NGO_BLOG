@@ -19,8 +19,8 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
   return (
     <aside aria-label="Sidebar" className="space-y-5">
       {/* Follow Us */}
-      <section aria-labelledby="follow-heading" className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
-        <h2 id="follow-heading" className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+      <section aria-labelledby="follow-heading" className="bg-white dark:bg-slate-800 rounded-xl p-5 ring-1 ring-slate-100 dark:ring-slate-700">
+        <h2 id="follow-heading" className="text-[13px] font-semibold text-slate-800 dark:text-slate-100 mb-3.5 flex items-center gap-2">
           <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" aria-hidden="true" />
           Follow Us
         </h2>
@@ -44,8 +44,8 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
       </section>
 
       {/* Popular Posts */}
-      <section aria-labelledby="popular-heading" className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
-        <h2 id="popular-heading" className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+      <section aria-labelledby="popular-heading" className="bg-white dark:bg-slate-800 rounded-xl p-5 ring-1 ring-slate-100 dark:ring-slate-700">
+        <h2 id="popular-heading" className="text-[13px] font-semibold text-slate-800 dark:text-slate-100 mb-3.5 flex items-center gap-2">
           <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" aria-hidden="true" />
           Popular Posts
         </h2>
@@ -82,13 +82,13 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-semibold text-amber-600 tracking-wide" aria-hidden="true">
+                <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 tracking-wide" aria-hidden="true">
                   #{index + 1}
                 </span>
-                <h3 className="text-[12px] font-medium text-slate-700 line-clamp-2 leading-snug group-hover:text-amber-700 transition-colors duration-200 mt-0.5">
+                <h3 className="text-[12px] font-medium text-slate-700 dark:text-slate-200 line-clamp-2 leading-snug group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors duration-200 mt-0.5">
                   {post.title}
                 </h3>
-                <div className="flex items-center gap-2.5 text-[10px] text-slate-500 mt-1 font-medium" aria-label={`${post.views} views, ${post.readTime} minutes read time`}>
+                <div className="flex items-center gap-2.5 text-[10px] text-slate-500 dark:text-slate-400 mt-1 font-medium" aria-label={`${post.views} views, ${post.readTime} minutes read time`}>
                   <span className="flex items-center gap-1"><Eye size={10} strokeWidth={1.5} aria-hidden="true" />{post.views}</span>
                   <span className="flex items-center gap-1"><Clock size={10} strokeWidth={1.5} aria-hidden="true" />{post.readTime}m</span>
                 </div>
@@ -99,8 +99,8 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
       </section>
 
       {/* Tags */}
-      <section aria-labelledby="tags-heading" className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
-        <h2 id="tags-heading" className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+      <section aria-labelledby="tags-heading" className="bg-white dark:bg-slate-800 rounded-xl p-5 ring-1 ring-slate-100 dark:ring-slate-700">
+        <h2 id="tags-heading" className="text-[13px] font-semibold text-slate-800 dark:text-slate-100 mb-3.5 flex items-center gap-2">
           <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" aria-hidden="true" />
           Tags
         </h2>
@@ -109,7 +109,7 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
             <button
               key={tag}
               onClick={() => setActiveCategory(tag)}
-              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 border border-slate-200 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-all duration-200"
+              className="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-500 hover:text-amber-700 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-all duration-200"
               aria-label={`Filter by ${tag}`}
             >
               {tag}
@@ -119,16 +119,16 @@ export default function Sidebar({ onReadArticle, onContact }: SidebarProps) {
       </section>
 
       {/* Monthly Archives */}
-      <section aria-labelledby="archives-heading" className="bg-white rounded-xl p-5 ring-1 ring-slate-100">
-        <h2 id="archives-heading" className="text-[13px] font-semibold text-slate-800 mb-3.5 flex items-center gap-2">
+      <section aria-labelledby="archives-heading" className="bg-white dark:bg-slate-800 rounded-xl p-5 ring-1 ring-slate-100 dark:ring-slate-700">
+        <h2 id="archives-heading" className="text-[13px] font-semibold text-slate-800 dark:text-slate-100 mb-3.5 flex items-center gap-2">
           <span className="w-0.5 h-3.5 bg-amber-500 rounded-full" aria-hidden="true" />
           Archives
         </h2>
         <ul className="space-y-1">
           {months.map(month => (
             <li key={month}>
-              <span className="text-[12px] text-slate-500 hover:text-amber-700 cursor-pointer transition-colors duration-200 flex items-center gap-2 py-1 font-medium">
-                <span className="w-1 h-1 rounded-full bg-slate-300" aria-hidden="true" />
+              <span className="text-[12px] text-slate-500 dark:text-slate-400 hover:text-amber-700 dark:hover:text-amber-400 cursor-pointer transition-colors duration-200 flex items-center gap-2 py-1 font-medium">
+                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600" aria-hidden="true" />
                 {month}
               </span>
             </li>

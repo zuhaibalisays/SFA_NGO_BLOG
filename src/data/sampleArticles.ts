@@ -2,6 +2,65 @@ import { Article } from '../types';
 
 export const sampleArticles: Article[] = [
   {
+    id: 'new-1',
+    title: 'The Power of Mother Tongue Education: Why Balochi Must Find Its Place in Our Schools',
+    excerpt: 'When a child learns in the language of their home, knowledge takes root deeper and confidence grows stronger. It is time we recognize Balochi not as a barrier to education, but as its most powerful foundation.',
+    content: `## A Language That Carries Centuries of Wisdom
+
+Walk through any village in Turbat, Panjgur, or Gwadar, and you will hear the Balochi language alive in the conversations of elders, the lullabies of mothers, and the laughter of children playing in the streets. Balochi is not merely a means of communication — it is a living archive of our history, our values, and our identity as a people.
+
+Yet when our children step into a classroom, that same language is left at the door. The textbooks, the instruction, the examinations — all arrive in a language that, for many rural students, feels foreign. The result is predictable: confusion, disengagement, and, far too often, dropout.
+
+## The Research Is Clear
+
+Decades of educational research across the world confirm a simple truth: children learn best in the language they speak at home. UNESCO reports that mother tongue-based multilingual education significantly improves learning outcomes, reduces repetition and dropout rates, and strengthens the acquisition of additional languages.
+
+In countries like the Philippines, Ethiopia, and Bolivia, introducing instruction in local languages during early years has transformed literacy rates. The evidence is overwhelming — yet in Balochistan, we continue to ignore it.
+
+When a six-year-old in a remote village hears mathematics explained in Urdu — a language they have barely begun to understand — they are not learning mathematics. They are learning silence. They are learning that school is not for them.
+
+## What We Lose When We Lose a Language
+
+Language is more than vocabulary and grammar. It carries worldview. The Balochi language contains words for concepts, relationships, and natural phenomena that simply do not exist in Urdu or English. When we marginalize Balochi in education, we do not just fail our children academically — we erode the cultural knowledge that has sustained our communities for generations.
+
+Consider the Balochi oral tradition: the epic poems of Mir Chakar Rind, the wisdom embedded in proverbs, the ecological knowledge encoded in pastoral terminology. This is not folklore to be preserved in museums. It is living knowledge that shapes how our young people understand themselves and their place in the world.
+
+## A Practical Path Forward
+
+Advocating for mother tongue education is not about rejecting Urdu or English. It is about building a strong foundation first. The most effective model — supported by evidence worldwide — is:
+
+1. **Early years (Classes 1-3):** Instruction primarily in Balochi, with gradual introduction of Urdu as a subject
+2. **Middle years (Classes 4-5):** Balanced bilingual instruction in Balochi and Urdu
+3. **Upper years (Classes 6+):** Multilingual approach with English added, while maintaining strength in mother tongue
+
+This is not a radical idea. It is how every successful education system in the world builds literacy — from Finland to Japan to South Africa.
+
+## What Can We Do?
+
+The change will not come from Islamabad alone. It must begin with us — parents, teachers, students, and community members in Balochistan.
+
+- **Parents:** Speak Balochi proudly at home. Read Balochi stories to your children. Let them know their language has value.
+- **Teachers:** Where possible, use Balochi to explain difficult concepts. Create bilingual learning materials.
+- **Students:** Write in Balochi. Translate what you learn. Share your knowledge in both languages.
+- **Community leaders:** Advocate for mother tongue education policies at the district and provincial level.
+
+## The Road Ahead
+
+There will be resistance. Some will argue that mother tongue education "holds children back" from learning the national language. The evidence says the opposite. Children who begin learning in their mother tongue become stronger in all languages — because they have learned *how to learn*.
+
+Our children deserve an education that begins where they are — in their homes, in their communities, in the language that first taught them what love and knowledge feel like. Balochi is not the obstacle to our children's future. It is the foundation upon which that future must be built.
+
+Let us have the courage to teach in the language of our people.`,
+    author: 'SFA Student Writer',
+    category: 'Articles',
+    coverImage: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop',
+    date: '2024-12-18',
+    readTime: 6,
+    featured: false,
+    views: 0,
+    tags: ['Articles', 'Education', 'Balochistan', 'Language']
+  },
+  {
     id: '1',
     title: 'The Impact of Favoritism in Institutions on Students Learning',
     excerpt: 'Favoritism in educational institutions creates an unequal learning environment that undermines merit, discourages hardworking students, and ultimately weakens the quality of education in Balochistan.',

@@ -12,7 +12,6 @@ export interface NavLink {
 
 export const primaryNavLinks: NavLink[] = [
   { label: 'Home', page: 'home' },
-  { label: 'Latest', page: 'latest' },
   { label: 'Articles', page: 'articles' },
   { label: 'About', page: 'about' },
 ];
@@ -20,7 +19,7 @@ export const primaryNavLinks: NavLink[] = [
 export const footerQuickLinks: NavLink[] = [
   { label: 'Home', page: 'home' },
   { label: 'About SFA', page: 'about' },
-  { label: 'Latest Articles', page: 'latest' },
+  { label: 'Articles', page: 'articles' },
   { label: 'Privacy Policy', page: 'privacy' },
   { label: 'Disclaimer', page: 'disclaimer' },
   { label: 'Terms & Conditions', page: 'terms' },
@@ -39,6 +38,7 @@ export const footerCategoryLinks: NavLink[] = [
 /** All unique categories used for filtering */
 export const allCategories = [
   'All',
+  'Latest',
   'Articles',
   'Book Reviews',
   'Letters',

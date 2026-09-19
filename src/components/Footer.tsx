@@ -8,13 +8,13 @@ export default function Footer({ onNavigate }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0F172A] mt-16" role="contentinfo">
+    <footer className="bg-slate-900 mt-16 transition-colors duration-300" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center font-bold text-white text-[10px]" aria-hidden="true">S</div>
+              <img src="https://raw.githubusercontent.com/zuhaibalisays/SFA_NGO_BLOG/main/SFA%20Logo.png" alt="" width={32} height={32} className="w-8 h-8 object-contain" aria-hidden="true" />
               <span className="text-white font-semibold text-sm tracking-tight">SFA Daily Articles</span>
             </div>
             <p className="text-slate-400 text-[12px] leading-relaxed max-w-xs">

@@ -15,7 +15,7 @@ import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
 
 function AppContent() {
-  const { setActiveCategory, setSearchQuery } = useBlog();
+  const { setActiveCategory, setActiveLanguage, setSearchQuery } = useBlog();
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [contactOpen, setContactOpen] = useState(false);
@@ -26,9 +26,12 @@ function AppContent() {
     setSearchQuery('');
     if (category) {
       setActiveCategory(category);
+    } else if (page === 'articles') {
+      setActiveCategory('All');
     } else {
       setActiveCategory('All');
     }
+    setActiveLanguage('All');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -63,7 +66,7 @@ function AppContent() {
         return <Disclaimer />;
       case 'terms':
         return <TermsConditions />;
-      default:
+      default: // home, articles, book-reviews, letters
         return (
           <>
             {currentPage === 'home' && <FeaturedPosts onReadArticle={handleReadArticle} />}
@@ -82,7 +85,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col transition-colors duration-300">
       <Header onNavigate={handleNavigate} currentPage={currentPage} />
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full" role="main">
         {renderPage()}

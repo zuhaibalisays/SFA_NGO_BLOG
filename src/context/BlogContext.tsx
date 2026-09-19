@@ -26,12 +26,20 @@ interface BlogContextType {
   filteredArticles: Article[];
   searchQuery: string;
   activeCategory: string;
+  activeLanguage: string;
+  isDarkMode: boolean;
+  fontSize: number;
   isAdminLoggedIn: boolean;
   contacts: ContactMessage[];
   securityState: SecurityState | null;
   auditLog: AuditEvent[];
   setSearchQuery: (query: string) => void;
   setActiveCategory: (category: string) => void;
+  setActiveLanguage: (language: string) => void;
+  toggleDarkMode: () => void;
+  setFontSize: (size: number) => void;
+  increaseFontSize: () => void;
+  decreaseFontSize: () => void;
   addArticle: (article: Omit<Article, 'id' | 'date' | 'views'>) => void;
   updateArticle: (id: string, article: Partial<Article>) => void;
   deleteArticle: (id: string) => void;
@@ -95,6 +103,15 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [activeLanguage, setActiveLanguage] = useState('All');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('sfa_dark_mode');
+    return saved === 'true';
+  });
+  const [fontSize, setFontSizeState] = useState(() => {
+    const saved = localStorage.getItem('sfa_font_size');
+    return saved ? parseInt(saved, 10) : 16;
+  });
   const [auditLog, setAuditLog] = useState<AuditEvent[]>(() => getAuditLog());
 
   // Persist state changes
@@ -103,6 +120,13 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (securityState) localStorage.setItem(SECURITY_KEY, JSON.stringify(securityState));
   }, [securityState]);
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
   useEffect(() => { setAuditLog(getAuditLog()); }, []);
 
   // Initialize default security state if none exists
@@ -213,6 +237,28 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   const incrementViews = useCallback((id: string) => {
     setArticles(prev => prev.map(a => a.id === id ? { ...a, views: a.views + 1 } : a));
   }, []);
+
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkMode(prev => {
+      const newValue = !prev;
+      localStorage.setItem('sfa_dark_mode', String(newValue));
+      return newValue;
+    });
+  }, []);
+
+  const setFontSize = useCallback((size: number) => {
+    const clampedSize = Math.max(12, Math.min(24, size));
+    setFontSizeState(clampedSize);
+    localStorage.setItem('sfa_font_size', String(clampedSize));
+  }, []);
+
+  const increaseFontSize = useCallback(() => {
+    setFontSize(fontSize + 2);
+  }, [fontSize, setFontSize]);
+
+  const decreaseFontSize = useCallback(() => {
+    setFontSize(fontSize - 2);
+  }, [fontSize, setFontSize]);
 
   // ============ SECURITY OPERATIONS ============
 
@@ -358,20 +404,28 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
     return { success: true };
   }, [securityState]);
 
-  const filteredArticles = articles.filter(article => {
-    const matchesCategory = activeCategory === 'All' || article.category === activeCategory;
-    const matchesSearch = searchQuery === '' ||
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  const filteredArticles = articles
+    .filter(article => {
+      const matchesCategory = activeCategory === 'All' || activeCategory === 'Latest' || article.category === activeCategory;
+      const matchesLanguage = activeLanguage === 'All' || article.language === activeLanguage;
+      const matchesSearch = searchQuery === '' ||
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCategory && matchesLanguage && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (activeCategory === 'Latest') {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+      return 0; // Keep original order for other filters
+    });
 
   return (
     <BlogContext.Provider value={{
-      articles, filteredArticles, searchQuery, activeCategory,
+      articles, filteredArticles, searchQuery, activeCategory, activeLanguage, isDarkMode, fontSize,
       isAdminLoggedIn, contacts, securityState, auditLog,
-      setSearchQuery, setActiveCategory,
+      setSearchQuery, setActiveCategory, setActiveLanguage, toggleDarkMode, setFontSize, increaseFontSize, decreaseFontSize,
       addArticle, updateArticle, deleteArticle,
       adminLogin, adminLogout, addContact, incrementViews,
       setupInitialAccount, setupTOTP, verifyAndEnableTOTP, disableTOTP,
