@@ -117,3 +117,36 @@ a, button {
 :focus:not(:focus-visible) {
   outline: none;
 }
+
+/* Balochi / Arabic text styles */
+.balochi-text,
+.arabic-text {
+  font-family: 'Noto Naskh Arabic', 'Vazirmatn', 'Arabic Typesetting', 'Traditional Arabic', 'Scheherazade New', serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 2;
+  letter-spacing: 0;
+  word-spacing: 0.05em;
+}
+
+.balochi-text {
+  font-size: 1.05em;
+}
+
+.arabic-text {
+  font-size: 1em;
+}
+
+/* RTL container for full sections */
+[dir="rtl"] {
+  font-family: 'Noto Naskh Arabic', 'Vazirmatn', 'Arabic Typesetting', 'Traditional Arabic', serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.9;
+}
+
+/* Ensure proper rendering of Arabic/Balochi numerals */
+.balochi-text *,
+.arabic-text * {
+  unicode-bidi: plaintext;
+}

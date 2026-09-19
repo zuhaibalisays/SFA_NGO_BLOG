@@ -58,6 +58,17 @@ export default function AdminDashboard() {
     }
   }, [retryAfter]);
 
+  // Reset view when logged out
+  useEffect(() => {
+    if (!isAdminLoggedIn) {
+      setView('login');
+      setPassword('');
+      setTotpCode('');
+      setLoginError('');
+      setRetryAfter(undefined);
+    }
+  }, [isAdminLoggedIn]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError('');
