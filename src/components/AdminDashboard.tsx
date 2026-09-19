@@ -46,6 +46,8 @@ export default function AdminDashboard() {
   const [successMsg, setSuccessMsg] = useState('');
   const [language, setLanguage] = useState<ArticleLanguage>('English');
   const [font, setFont] = useState<ArticleFont>('Inter');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   // Security setup state
@@ -277,6 +279,28 @@ export default function AdminDashboard() {
   const handleBold = () => insertMarkdown('**', '**');
   const handleQuote = () => insertMarkdown('> ');
 
+  // Tag management
+  const addTag = (tag: string) => {
+    const trimmed = tag.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter(t => t !== tagToRemove));
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag(tagInput);
+    } else if (e.key === 'Backspace' && tagInput === '' && tags.length > 0) {
+      removeTag(tags[tags.length - 1]);
+    }
+  };
+
   // Auto-update font when language changes
   useEffect(() => {
     if (language === 'Balochi') {
@@ -293,17 +317,19 @@ export default function AdminDashboard() {
     setCoverImage(''); setExcerpt(''); setContent(''); setFeatured(false);
     setEditingId(null); setSuccessMsg('');
     setLanguage('English'); setFont('Inter');
+    setTags([]); setTagInput('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !content || !excerpt) { setSuccessMsg('Please fill in all required fields.'); return; }
     const readTime = Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
+    const articleTags = tags.length > 0 ? tags : [category];
     if (editingId) {
-      updateArticle(editingId, { title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category], language, font });
+      updateArticle(editingId, { title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: articleTags, language, font });
       setSuccessMsg('Article updated!');
     } else {
-      addArticle({ title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category], language, font });
+      addArticle({ title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: articleTags, language, font });
       setSuccessMsg('Article published!');
     }
     resetForm();
@@ -315,6 +341,7 @@ export default function AdminDashboard() {
     setCoverImage(article.coverImage); setExcerpt(article.excerpt); setContent(article.content);
     setFeatured(article.featured); setEditingId(article.id); setActiveTab('create');
     setLanguage(article.language || 'English'); setFont(article.font || 'Inter');
+    setTags(article.tags || []); setTagInput('');
   };
 
   const handleDelete = (id: string) => {
@@ -602,6 +629,35 @@ export default function AdminDashboard() {
               <div className="md:col-span-2">
                 <label htmlFor="art-exc" className="block text-[13px] font-medium text-slate-700 mb-1.5">Excerpt *</label>
                 <textarea id="art-exc" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-none" required />
+              </div>
+              <div className="md:col-span-2">
+                <label htmlFor="art-tags" className="block text-[13px] font-medium text-slate-700 mb-1.5">Tags</label>
+                <div className="flex flex-wrap gap-1.5 p-2.5 rounded-lg border border-slate-200 bg-slate-50 min-h-[42px]">
+                  {tags.map(tag => (
+                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-amber-100 text-amber-800 text-[11px] font-medium">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag)}
+                        className="hover:text-amber-900 transition-colors"
+                        aria-label={`Remove tag ${tag}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    id="art-tags"
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={handleTagKeyDown}
+                    onBlur={() => tagInput && addTag(tagInput)}
+                    placeholder={tags.length === 0 ? "Type a tag and press Enter or comma" : "Add more tags..."}
+                    className="flex-1 min-w-[120px] bg-transparent text-slate-800 text-sm focus:outline-none placeholder:text-slate-400"
+                  />
+                </div>
+                <p className="text-[11px] text-slate-400 mt-1">Press Enter or comma to add a tag. Click × to remove.</p>
               </div>
               <div className="md:col-span-2">
                 <label className="flex items-center gap-2 cursor-pointer">

@@ -15,7 +15,7 @@ import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
 
 function AppContent() {
-  const { setActiveCategory, setSearchQuery } = useBlog();
+  const { setActiveCategory, setActiveLanguage, setSearchQuery } = useBlog();
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [contactOpen, setContactOpen] = useState(false);
@@ -31,6 +31,7 @@ function AppContent() {
     } else {
       setActiveCategory('All');
     }
+    setActiveLanguage('All');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

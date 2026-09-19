@@ -26,12 +26,14 @@ interface BlogContextType {
   filteredArticles: Article[];
   searchQuery: string;
   activeCategory: string;
+  activeLanguage: string;
   isAdminLoggedIn: boolean;
   contacts: ContactMessage[];
   securityState: SecurityState | null;
   auditLog: AuditEvent[];
   setSearchQuery: (query: string) => void;
   setActiveCategory: (category: string) => void;
+  setActiveLanguage: (language: string) => void;
   addArticle: (article: Omit<Article, 'id' | 'date' | 'views'>) => void;
   updateArticle: (id: string, article: Partial<Article>) => void;
   deleteArticle: (id: string) => void;
@@ -95,6 +97,7 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [activeLanguage, setActiveLanguage] = useState('All');
   const [auditLog, setAuditLog] = useState<AuditEvent[]>(() => getAuditLog());
 
   // Persist state changes
@@ -361,11 +364,12 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   const filteredArticles = articles
     .filter(article => {
       const matchesCategory = activeCategory === 'All' || activeCategory === 'Latest' || article.category === activeCategory;
+      const matchesLanguage = activeLanguage === 'All' || article.language === activeLanguage;
       const matchesSearch = searchQuery === '' ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesLanguage && matchesSearch;
     })
     .sort((a, b) => {
       if (activeCategory === 'Latest') {
@@ -376,9 +380,9 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <BlogContext.Provider value={{
-      articles, filteredArticles, searchQuery, activeCategory,
+      articles, filteredArticles, searchQuery, activeCategory, activeLanguage,
       isAdminLoggedIn, contacts, securityState, auditLog,
-      setSearchQuery, setActiveCategory,
+      setSearchQuery, setActiveCategory, setActiveLanguage,
       addArticle, updateArticle, deleteArticle,
       adminLogin, adminLogout, addContact, incrementViews,
       setupInitialAccount, setupTOTP, verifyAndEnableTOTP, disableTOTP,

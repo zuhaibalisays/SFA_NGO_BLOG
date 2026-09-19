@@ -8,11 +8,13 @@ interface BlogFeedProps {
 }
 
 export default function BlogFeed({ onReadArticle }: BlogFeedProps) {
-  const { filteredArticles, activeCategory, setActiveCategory, searchQuery } = useBlog();
+  const { filteredArticles, activeCategory, setActiveCategory, activeLanguage, setActiveLanguage, searchQuery } = useBlog();
   const [visibleCount, setVisibleCount] = useState(6);
 
   const displayedArticles = filteredArticles.slice(0, visibleCount);
   const hasMore = visibleCount < filteredArticles.length;
+
+  const languages = ['All', 'English', 'Balochi', 'Urdu'];
 
   return (
     <section aria-labelledby="browse-heading">
@@ -38,6 +40,28 @@ export default function BlogFeed({ onReadArticle }: BlogFeedProps) {
               {cat}
             </button>
           ))}
+        </div>
+
+        {/* Language Filter */}
+        <div className="mt-4">
+          <h3 className="text-[13px] font-medium text-slate-600 mb-2">Filter by Language</h3>
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter articles by language">
+            {languages.map(lang => (
+              <button
+                key={lang}
+                onClick={() => { setActiveLanguage(lang); setVisibleCount(6); }}
+                className={`px-3 py-1.5 rounded-md text-[12px] font-medium tracking-wide transition-all duration-200 ${
+                  activeLanguage === lang
+                    ? 'bg-amber-500 text-white shadow-sm'
+                    : 'bg-white text-slate-500 border border-slate-200 hover:border-amber-300 hover:text-amber-700 hover:shadow-sm'
+                }`}
+                aria-pressed={activeLanguage === lang}
+                aria-label={`Filter by ${lang} language`}
+              >
+                {lang}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
