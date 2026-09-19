@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useBlog } from '../context/BlogContext';
 import { Clock, Eye, User, Calendar, ArrowLeft, Share2 } from 'lucide-react';
+import ShareModal from './ShareModal';
 
 interface ArticleViewProps {
   articleId: string;
@@ -10,6 +11,7 @@ interface ArticleViewProps {
 export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
   const { articles, incrementViews } = useBlog();
   const article = articles.find(a => a.id === articleId);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   useEffect(() => {
     if (articleId) {
@@ -143,7 +145,11 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
             <Eye size={13} strokeWidth={1.5} className="text-slate-400" aria-hidden="true" />
             <span>{article.views} views</span>
           </span>
-          <button className="ml-auto flex items-center gap-1.5 text-slate-400 hover:text-amber-600 transition-colors duration-200" aria-label="Share this article">
+          <button 
+            onClick={() => setShareModalOpen(true)}
+            className="ml-auto flex items-center gap-1.5 text-slate-400 hover:text-amber-600 transition-colors duration-200" 
+            aria-label="Share this article"
+          >
             <Share2 size={13} strokeWidth={1.5} aria-hidden="true" />
             Share
           </button>
@@ -195,6 +201,15 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
           </p>
         </div>
       </footer>
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        articleTitle={article.title}
+        articleAuthor={article.author}
+        articleUrl={window.location.href}
+      />
     </article>
   );
 }
