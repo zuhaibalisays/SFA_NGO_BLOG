@@ -151,72 +151,134 @@ a, button {
   unicode-bidi: plaintext;
 }
 
+/* Light Mode (Default) Styles */
+html,
+html body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Dark Mode Styles */
-.dark {
+html.dark {
   color-scheme: dark;
 }
 
 html.dark,
 html.dark body {
-  background-color: #0f172a !important;
-  color: #e2e8f0 !important;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode scrollbar */
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Dark mode scrollbar */
-.dark ::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
   background: #1e293b;
 }
 
-.dark ::-webkit-scrollbar-thumb {
+html.dark ::-webkit-scrollbar-thumb {
   background: #475569;
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
+html.dark ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
 }
 
+/* Light mode selection */
+::selection {
+  background-color: #f59e0b;
+  color: white;
+}
+
 /* Dark mode selection */
-.dark ::selection {
+html.dark ::selection {
   background-color: #f59e0b;
   color: #0f172a;
 }
 
-/* Dark mode markdown elements - improved visibility */
-.dark h1,
-.dark h2,
-.dark h3,
-.dark h4,
-.dark h5,
-.dark h6 {
-  color: #f1f5f9 !important;
+/* Light mode markdown elements */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f172a;
 }
 
-.dark strong,
-.dark b {
-  color: #fbbf24 !important;
+strong, b {
+  color: #0f172a;
   font-weight: 700;
 }
 
-.dark blockquote {
-  background-color: #1e293b !important;
-  border-left-color: #f59e0b !important;
-  color: #cbd5e1 !important;
+blockquote {
+  background-color: #fef3c7;
+  border-left-color: #f59e0b;
+  color: #78350f;
 }
 
-.dark code {
-  background-color: #1e293b !important;
-  color: #fbbf24 !important;
+code {
+  background-color: #f1f5f9;
+  color: #0f172a;
 }
 
-.dark pre {
-  background-color: #1e293b !important;
-  color: #e2e8f0 !important;
+pre {
+  background-color: #f1f5f9;
+  color: #0f172a;
 }
 
-.dark a {
-  color: #fbbf24 !important;
+a {
+  color: #d97706;
 }
 
-.dark a:hover {
-  color: #f59e0b !important;
+a:hover {
+  color: #b45309;
+}
+
+/* Dark mode markdown elements - improved visibility */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  color: #f1f5f9;
+}
+
+html.dark strong,
+html.dark b {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+html.dark blockquote {
+  background-color: #1e293b;
+  border-left-color: #f59e0b;
+  color: #cbd5e1;
+}
+
+html.dark code {
+  background-color: #1e293b;
+  color: #fbbf24;
+}
+
+html.dark pre {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
+
+html.dark a {
+  color: #fbbf24;
+}
+
+html.dark a:hover {
+  color: #f59e0b;
 }
