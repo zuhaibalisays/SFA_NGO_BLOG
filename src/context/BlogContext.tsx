@@ -28,6 +28,7 @@ interface BlogContextType {
   activeCategory: string;
   activeLanguage: string;
   isDarkMode: boolean;
+  fontSize: number;
   isAdminLoggedIn: boolean;
   contacts: ContactMessage[];
   securityState: SecurityState | null;
@@ -36,6 +37,9 @@ interface BlogContextType {
   setActiveCategory: (category: string) => void;
   setActiveLanguage: (language: string) => void;
   toggleDarkMode: () => void;
+  setFontSize: (size: number) => void;
+  increaseFontSize: () => void;
+  decreaseFontSize: () => void;
   addArticle: (article: Omit<Article, 'id' | 'date' | 'views'>) => void;
   updateArticle: (id: string, article: Partial<Article>) => void;
   deleteArticle: (id: string) => void;
@@ -103,6 +107,10 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('sfa_dark_mode');
     return saved === 'true';
+  });
+  const [fontSize, setFontSizeState] = useState(() => {
+    const saved = localStorage.getItem('sfa_font_size');
+    return saved ? parseInt(saved, 10) : 16;
   });
   const [auditLog, setAuditLog] = useState<AuditEvent[]>(() => getAuditLog());
 
@@ -237,6 +245,20 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
       return newValue;
     });
   }, []);
+
+  const setFontSize = useCallback((size: number) => {
+    const clampedSize = Math.max(12, Math.min(24, size));
+    setFontSizeState(clampedSize);
+    localStorage.setItem('sfa_font_size', String(clampedSize));
+  }, []);
+
+  const increaseFontSize = useCallback(() => {
+    setFontSize(fontSize + 2);
+  }, [fontSize, setFontSize]);
+
+  const decreaseFontSize = useCallback(() => {
+    setFontSize(fontSize - 2);
+  }, [fontSize, setFontSize]);
 
   // ============ SECURITY OPERATIONS ============
 
@@ -401,9 +423,9 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <BlogContext.Provider value={{
-      articles, filteredArticles, searchQuery, activeCategory, activeLanguage, isDarkMode,
+      articles, filteredArticles, searchQuery, activeCategory, activeLanguage, isDarkMode, fontSize,
       isAdminLoggedIn, contacts, securityState, auditLog,
-      setSearchQuery, setActiveCategory, setActiveLanguage, toggleDarkMode,
+      setSearchQuery, setActiveCategory, setActiveLanguage, toggleDarkMode, setFontSize, increaseFontSize, decreaseFontSize,
       addArticle, updateArticle, deleteArticle,
       adminLogin, adminLogout, addContact, incrementViews,
       setupInitialAccount, setupTOTP, verifyAndEnableTOTP, disableTOTP,

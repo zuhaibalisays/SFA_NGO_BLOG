@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useBlog } from '../context/BlogContext';
-import { Clock, Eye, User, Calendar, ArrowLeft, Share2 } from 'lucide-react';
+import { Clock, Eye, User, Calendar, ArrowLeft, Share2, Minus, Plus } from 'lucide-react';
 import ShareModal from './ShareModal';
 
 interface ArticleViewProps {
@@ -9,7 +9,7 @@ interface ArticleViewProps {
 }
 
 export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
-  const { articles, incrementViews } = useBlog();
+  const { articles, incrementViews, fontSize, increaseFontSize, decreaseFontSize } = useBlog();
   const article = articles.find(a => a.id === articleId);
   const [shareModalOpen, setShareModalOpen] = useState(false);
 
@@ -171,6 +171,30 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
         </div>
       </div>
 
+      {/* Font Size Controls */}
+      <div className="flex items-center justify-end gap-2 mb-4">
+        <span className="text-xs text-slate-500 dark:text-slate-400">Font Size:</span>
+        <button
+          onClick={decreaseFontSize}
+          disabled={fontSize <= 12}
+          className="p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          aria-label="Decrease font size"
+        >
+          <Minus size={16} />
+        </button>
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-200 min-w-[3rem] text-center">
+          {fontSize}px
+        </span>
+        <button
+          onClick={increaseFontSize}
+          disabled={fontSize >= 24}
+          className="p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          aria-label="Increase font size"
+        >
+          <Plus size={16} />
+        </button>
+      </div>
+
       {/* Article Content */}
       <div
         className="prose-custom"
@@ -179,6 +203,7 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
           fontFamily: articleFont,
           textAlign: isRTL ? 'right' : 'left',
           lineHeight: isRTL ? '2' : '1.8',
+          fontSize: `${fontSize}px`,
         }}
       >
         {renderContent(article.content)}

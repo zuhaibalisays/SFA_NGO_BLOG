@@ -156,9 +156,10 @@ a, button {
   color-scheme: dark;
 }
 
-.dark body {
-  background-color: #0f172a;
-  color: #e2e8f0;
+html.dark,
+html.dark body {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
 }
 
 /* Dark mode scrollbar */
@@ -178,4 +179,44 @@ a, button {
 .dark ::selection {
   background-color: #f59e0b;
   color: #0f172a;
+}
+
+/* Dark mode markdown elements - improved visibility */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f1f5f9 !important;
+}
+
+.dark strong,
+.dark b {
+  color: #fbbf24 !important;
+  font-weight: 700;
+}
+
+.dark blockquote {
+  background-color: #1e293b !important;
+  border-left-color: #f59e0b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark code {
+  background-color: #1e293b !important;
+  color: #fbbf24 !important;
+}
+
+.dark pre {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+.dark a {
+  color: #fbbf24 !important;
+}
+
+.dark a:hover {
+  color: #f59e0b !important;
 }
