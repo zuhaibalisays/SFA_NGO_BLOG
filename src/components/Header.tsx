@@ -79,9 +79,13 @@ export default function Header({ onNavigate, currentPage }: HeaderProps) {
               className="flex items-center gap-2.5 group"
               aria-label="SFA Daily Articles - Go to homepage"
             >
-              <div className="w-8 h-8 rounded-md bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center font-bold text-white text-sm shadow-sm shadow-amber-500/20" aria-hidden="true">
-                S
-              </div>
+              <img
+                src="/sfa-logo.svg"
+                alt="SFA Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8"
+              />
               <div className="hidden sm:block">
                 <span className="text-white font-semibold text-sm tracking-tight group-hover:text-amber-300 transition-colors duration-200">
                   SFA Daily Articles

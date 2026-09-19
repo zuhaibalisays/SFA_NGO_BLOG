@@ -358,14 +358,21 @@ export function BlogProvider({ children }: { children: React.ReactNode }) {
     return { success: true };
   }, [securityState]);
 
-  const filteredArticles = articles.filter(article => {
-    const matchesCategory = activeCategory === 'All' || article.category === activeCategory;
-    const matchesSearch = searchQuery === '' ||
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  const filteredArticles = articles
+    .filter(article => {
+      const matchesCategory = activeCategory === 'All' || activeCategory === 'Latest' || article.category === activeCategory;
+      const matchesSearch = searchQuery === '' ||
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (activeCategory === 'Latest') {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+      return 0; // Keep original order for other filters
+    });
 
   return (
     <BlogContext.Provider value={{

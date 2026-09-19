@@ -26,6 +26,8 @@ function AppContent() {
     setSearchQuery('');
     if (category) {
       setActiveCategory(category);
+    } else if (page === 'articles') {
+      setActiveCategory('All');
     } else {
       setActiveCategory('All');
     }
@@ -63,7 +65,7 @@ function AppContent() {
         return <Disclaimer />;
       case 'terms':
         return <TermsConditions />;
-      default:
+      default: // home, articles, book-reviews, letters
         return (
           <>
             {currentPage === 'home' && <FeaturedPosts onReadArticle={handleReadArticle} />}
