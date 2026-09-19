@@ -20,22 +20,21 @@ export default function Footer({ onNavigate }: FooterProps) {
             <p className="text-slate-400 text-[12px] leading-relaxed max-w-xs">
               School-for-All Welfare Organization is a non-profit established on <time dateTime="2020-10-01">October 1, 2020</time> in Turbat, Balochistan — empowering student voices through education and expression.
             </p>
-            <a 
-              href="https://sfa.org" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 mt-3 text-[12px] text-amber-400 hover:text-amber-300 transition-colors duration-200"
-              aria-label="Visit SFA official website"
-            >
-              <i className="fas fa-globe text-[10px]" aria-hidden="true"></i>
-              sfa.org
-            </a>
-            <nav aria-label="Social media links" className="flex gap-2 mt-4">
+            <nav aria-label="Social media and website links" className="flex gap-2 mt-4">
               {socialLinks.map((social) => (
                 <a key={social.label} href={social.href} className="w-7 h-7 rounded-md bg-white/[0.05] border border-white/[0.08] flex items-center justify-center hover:bg-amber-500/10 hover:border-amber-500/20 hover:text-amber-400 text-slate-400 transition-all duration-200" aria-label={social.ariaLabel}>
                   <i className={`${social.icon} text-[11px]`} aria-hidden="true"></i>
                 </a>
               ))}
+              <a 
+                href="https://sfa.org" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-md bg-white/[0.05] border border-white/[0.08] flex items-center justify-center hover:bg-amber-500/10 hover:border-amber-500/20 hover:text-amber-400 text-slate-400 transition-all duration-200"
+                aria-label="Visit SFA official website"
+              >
+                <i className="fas fa-globe text-[11px]" aria-hidden="true"></i>
+              </a>
             </nav>
           </div>
 
@@ -48,17 +47,6 @@ export default function Footer({ onNavigate }: FooterProps) {
                   <button onClick={() => onNavigate(link.page, link.category)} className="text-[12px] text-slate-400 hover:text-white transition-colors duration-200">{link.label}</button>
                 </li>
               ))}
-              <li>
-                <a 
-                  href="https://sfa.org" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-[12px] text-slate-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-1"
-                >
-                  Official Website
-                  <i className="fas fa-external-link-alt text-[8px]" aria-hidden="true"></i>
-                </a>
-              </li>
             </ul>
           </nav>
 
