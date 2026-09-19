@@ -353,20 +353,20 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm ring-1 ring-slate-200 dark:ring-slate-700 p-8 transition-colors duration-300">
             <header className="text-center mb-6">
               <div className="w-14 h-14 mx-auto bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-sm shadow-amber-500/20" aria-hidden="true">
                 <Shield className="text-white" size={22} />
               </div>
-              <h1 className="text-xl font-bold text-slate-800">Writer Login</h1>
-              <p className="text-[13px] text-slate-500 mt-1">Secure access to the article editor</p>
+              <h1 className="text-xl font-bold text-slate-800 dark:text-white">Writer Login</h1>
+              <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-1">Secure access to the article editor</p>
             </header>
 
-            {successMsg && <div className="bg-emerald-50 border border-emerald-200/60 text-emerald-700 px-4 py-2.5 rounded-lg mb-4 text-[13px]" role="status">{successMsg}</div>}
+            {successMsg && <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/60 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-4 py-2.5 rounded-lg mb-4 text-[13px]" role="status">{successMsg}</div>}
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label htmlFor="login-password" className="block text-[13px] font-medium text-slate-700 mb-1.5">Password</label>
+                <label htmlFor="login-password" className="block text-[13px] font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
                 <input
                   id="login-password"
                   type="password"
@@ -374,30 +374,30 @@ export default function AdminDashboard() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   disabled={!!retryAfter}
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200 disabled:opacity-50"
+                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 transition-all duration-200 disabled:opacity-50"
                   required
                   autoComplete="current-password"
                 />
               </div>
-              {loginError && <p className="text-red-500 text-[13px]" role="alert">{loginError}</p>}
+              {loginError && <p className="text-red-500 dark:text-red-400 text-[13px]" role="alert">{loginError}</p>}
               {retryAfter && retryAfter > 0 && (
-                <p className="text-amber-600 text-[12px] flex items-center gap-1.5" role="status">
+                <p className="text-amber-600 dark:text-amber-400 text-[12px] flex items-center gap-1.5" role="status">
                   <AlertTriangle size={13} /> Too many attempts. Wait {formatRetryAfter(retryAfter)}.
                 </p>
               )}
               <button
                 type="submit"
                 disabled={!!retryAfter}
-                className="w-full py-2.5 bg-slate-800 text-white rounded-lg font-medium text-sm hover:bg-slate-700 transition-colors duration-200 disabled:opacity-50"
+                className="w-full py-2.5 bg-slate-800 dark:bg-amber-500 text-white dark:text-slate-900 rounded-lg font-medium text-sm hover:bg-slate-700 dark:hover:bg-amber-400 transition-colors duration-200 disabled:opacity-50"
               >
                 Sign In
               </button>
             </form>
 
-            <div className="mt-4 pt-4 border-t border-slate-100">
+            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
               <button
                 onClick={() => { setView('forgot'); setLoginError(''); }}
-                className="w-full text-center text-[12px] text-slate-500 hover:text-amber-600 transition-colors duration-200 font-medium"
+                className="w-full text-center text-[12px] text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-200 font-medium"
               >
                 Forgot Password?
               </button>
