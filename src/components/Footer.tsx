@@ -14,7 +14,7 @@ export default function Footer({ onNavigate }: FooterProps) {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <img src="/sfa-logo.svg" alt="" width={24} height={24} className="w-6 h-6" aria-hidden="true" />
+              <img src="https://raw.githubusercontent.com/zuhaibalisays/SFA_NGO_BLOG/main/SFA%20Logo.png" alt="" width={32} height={32} className="w-8 h-8 object-contain" aria-hidden="true" />
               <span className="text-white font-semibold text-sm tracking-tight">SFA Daily Articles</span>
             </div>
             <p className="text-slate-400 text-[12px] leading-relaxed max-w-xs">

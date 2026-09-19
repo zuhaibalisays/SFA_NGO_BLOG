@@ -1,10 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useBlog } from '../context/BlogContext';
-import { Article, Category } from '../types';
-import { Lock, LogOut, Plus, Edit3, Trash2, Save, FileText, Eye, Shield, Key, RefreshCw, AlertTriangle, Download, Copy, Check, ChevronLeft } from 'lucide-react';
+import { Article, Category, ArticleLanguage, ArticleFont } from '../types';
+import { Lock, LogOut, Plus, Edit3, Trash2, Save, FileText, Eye, Shield, Key, RefreshCw, AlertTriangle, Download, Copy, Check, ChevronLeft, Heading, Bold, Quote } from 'lucide-react';
 import { formatRetryAfter } from '../security';
 
 const categories: Category[] = ['Articles', 'Book Reviews', 'Letters', 'Social Issues', 'Stories', 'Weekly Reports', 'Motivational'];
+
+const languages: ArticleLanguage[] = ['English', 'Balochi', 'Urdu'];
+
+const fonts: { value: ArticleFont; label: string; rtl: boolean }[] = [
+  { value: 'Inter', label: 'Inter (English)', rtl: false },
+  { value: 'Noto Naskh Arabic', label: 'Noto Naskh Arabic (Balochi/Arabic)', rtl: true },
+  { value: 'Vazirmatn', label: 'Vazirmatn (Balochi/Arabic)', rtl: true },
+  { value: 'Scheherazade New', label: 'Scheherazade New (Arabic)', rtl: true },
+  { value: 'Amiri', label: 'Amiri (Arabic)', rtl: true },
+  { value: 'Noto Nastaliq Urdu', label: 'Noto Nastaliq Urdu (Urdu)', rtl: true },
+];
 
 type DashboardView = 'login' | 'mfa' | 'forgot' | 'recovery-code' | 'recovery-key' | 'recovery-new-password' | 'dashboard' | 'security';
 
@@ -33,6 +44,9 @@ export default function AdminDashboard() {
   const [content, setContent] = useState('');
   const [featured, setFeatured] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  const [language, setLanguage] = useState<ArticleLanguage>('English');
+  const [font, setFont] = useState<ArticleFont>('Inter');
+  const contentRef = useRef<HTMLTextAreaElement>(null);
 
   // Security setup state
   const [totpUri, setTotpUri] = useState('');
@@ -215,10 +229,70 @@ export default function AdminDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  // Markdown formatting helpers
+  const insertMarkdown = (prefix: string, suffix: string = '') => {
+    const textarea = contentRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const before = content.substring(0, start);
+    const after = content.substring(end);
+
+    // For line-level formatting (heading, quote), ensure we're at the start of a line
+    if (prefix === '## ' || prefix === '> ') {
+      const lineStart = before.lastIndexOf('\n') + 1;
+      const currentLine = before.substring(lineStart);
+      
+      if (currentLine === '' || currentLine === '\n') {
+        // Already at start of line
+        const newContent = before + prefix + selectedText + suffix + after;
+        setContent(newContent);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+        }, 0);
+      } else {
+        // Need to add a new line
+        const newContent = before + '\n' + prefix + selectedText + suffix + after;
+        setContent(newContent);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 1 + prefix.length, start + 1 + prefix.length + selectedText.length);
+        }, 0);
+      }
+    } else {
+      // Inline formatting (bold, italic)
+      const newContent = before + prefix + selectedText + suffix + after;
+      setContent(newContent);
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+      }, 0);
+    }
+  };
+
+  const handleHeading = () => insertMarkdown('## ');
+  const handleBold = () => insertMarkdown('**', '**');
+  const handleQuote = () => insertMarkdown('> ');
+
+  // Auto-update font when language changes
+  useEffect(() => {
+    if (language === 'Balochi') {
+      setFont('Noto Naskh Arabic');
+    } else if (language === 'Urdu') {
+      setFont('Noto Nastaliq Urdu');
+    } else {
+      setFont('Inter');
+    }
+  }, [language]);
+
   const resetForm = () => {
     setTitle(''); setAuthor('SFA Student Writer'); setCategory('Articles');
     setCoverImage(''); setExcerpt(''); setContent(''); setFeatured(false);
     setEditingId(null); setSuccessMsg('');
+    setLanguage('English'); setFont('Inter');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -226,10 +300,10 @@ export default function AdminDashboard() {
     if (!title || !content || !excerpt) { setSuccessMsg('Please fill in all required fields.'); return; }
     const readTime = Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
     if (editingId) {
-      updateArticle(editingId, { title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category] });
+      updateArticle(editingId, { title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category], language, font });
       setSuccessMsg('Article updated!');
     } else {
-      addArticle({ title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category] });
+      addArticle({ title, author, category, coverImage: coverImage || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop', excerpt, content, featured, readTime, tags: [category], language, font });
       setSuccessMsg('Article published!');
     }
     resetForm();
@@ -240,6 +314,7 @@ export default function AdminDashboard() {
     setTitle(article.title); setAuthor(article.author); setCategory(article.category);
     setCoverImage(article.coverImage); setExcerpt(article.excerpt); setContent(article.content);
     setFeatured(article.featured); setEditingId(article.id); setActiveTab('create');
+    setLanguage(article.language || 'English'); setFont(article.font || 'Inter');
   };
 
   const handleDelete = (id: string) => {
@@ -508,6 +583,18 @@ export default function AdminDashboard() {
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
+              <div>
+                <label htmlFor="art-lang" className="block text-[13px] font-medium text-slate-700 mb-1.5">Language</label>
+                <select id="art-lang" value={language} onChange={(e) => setLanguage(e.target.value as ArticleLanguage)} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400">
+                  {languages.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="art-font" className="block text-[13px] font-medium text-slate-700 mb-1.5">Font Style</label>
+                <select id="art-font" value={font} onChange={(e) => setFont(e.target.value as ArticleFont)} className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400">
+                  {fonts.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+                </select>
+              </div>
               <div className="md:col-span-2">
                 <label htmlFor="art-img" className="block text-[13px] font-medium text-slate-700 mb-1.5">Cover Image URL</label>
                 <input id="art-img" type="url" value={coverImage} onChange={(e) => setCoverImage(e.target.value)} placeholder="https://..." className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400" />
@@ -525,7 +612,51 @@ export default function AdminDashboard() {
             </div>
             <div>
               <label htmlFor="art-content" className="block text-[13px] font-medium text-slate-700 mb-1.5">Content * <span className="text-slate-400 font-normal">(Markdown supported)</span></label>
-              <textarea id="art-content" value={content} onChange={(e) => setContent(e.target.value)} rows={14} className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-y" required />
+              {/* Formatting Toolbar */}
+              <div className="flex items-center gap-1 mb-2 p-1.5 bg-slate-50 border border-slate-200 rounded-t-lg">
+                <button
+                  type="button"
+                  onClick={handleHeading}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-white hover:text-slate-800 rounded transition-colors"
+                  title="Heading (## )"
+                >
+                  <Heading size={14} />
+                  <span>Heading</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleBold}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-white hover:text-slate-800 rounded transition-colors"
+                  title="Bold (**text**)"
+                >
+                  <Bold size={14} />
+                  <span>Bold</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleQuote}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium text-slate-600 hover:bg-white hover:text-slate-800 rounded transition-colors"
+                  title="Quote (> )"
+                >
+                  <Quote size={14} />
+                  <span>Quote</span>
+                </button>
+                <div className="w-px h-4 bg-slate-300 mx-1" />
+                <span className="text-[10px] text-slate-400 px-2">
+                  {language === 'English' ? 'LTR' : 'RTL'} · {font}
+                </span>
+              </div>
+              <textarea
+                ref={contentRef}
+                id="art-content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={14}
+                dir={fonts.find(f => f.value === font)?.rtl ? 'rtl' : 'ltr'}
+                style={{ fontFamily: font, textAlign: fonts.find(f => f.value === font)?.rtl ? 'right' : 'left' }}
+                className="w-full px-4 py-3 rounded-b-lg border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 resize-y"
+                required
+              />
             </div>
             <div className="flex gap-2.5">
               <button type="submit" className="flex items-center gap-1.5 px-5 py-2.5 bg-amber-500 text-white rounded-lg font-medium text-sm hover:bg-amber-400 transition-colors shadow-sm shadow-amber-500/20">

@@ -29,6 +29,10 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
     );
   }
 
+  // Determine if article is RTL based on language
+  const isRTL = article.language === 'Balochi' || article.language === 'Urdu';
+  const articleFont = article.font || 'Inter';
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -162,7 +166,15 @@ export default function ArticleView({ articleId, onBack }: ArticleViewProps) {
       </div>
 
       {/* Article Content */}
-      <div className="prose-custom">
+      <div
+        className="prose-custom"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        style={{
+          fontFamily: articleFont,
+          textAlign: isRTL ? 'right' : 'left',
+          lineHeight: isRTL ? '2' : '1.8',
+        }}
+      >
         {renderContent(article.content)}
       </div>
 

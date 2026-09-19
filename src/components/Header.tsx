@@ -80,11 +80,11 @@ export default function Header({ onNavigate, currentPage }: HeaderProps) {
               aria-label="SFA Daily Articles - Go to homepage"
             >
               <img
-                src="/sfa-logo.svg"
+                src="https://raw.githubusercontent.com/zuhaibalisays/SFA_NGO_BLOG/main/SFA%20Logo.png"
                 alt="SFA Logo"
-                width={32}
-                height={32}
-                className="w-8 h-8"
+                width={40}
+                height={40}
+                className="w-10 h-10 object-contain"
               />
               <div className="hidden sm:block">
                 <span className="text-white font-semibold text-sm tracking-tight group-hover:text-amber-300 transition-colors duration-200">
